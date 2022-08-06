@@ -8,6 +8,9 @@ window.onload = function() {
         });
     }
 
+    var donhang = document.getElementsByClassName('don-hang')[0];
+    donhang.classList.add('active');
+
     getCurrentUser((user)=>{
         if(user != null) {
             if(user.MaQuyen != 1) {
@@ -726,7 +729,13 @@ function refreshTableDonHang() {
             request: "getall",
         },
         success: function(data, status, xhr) {
-            addTableDonHang(data);
+            const sortTimeData = data[0].sort((a, b) => {
+                return new Date(b.NgayLap) - new Date(a.NgayLap)
+            })
+            const finalData = sortTimeData.sort((a, b) => {
+                return a.TrangThai - b.TrangThai
+            })
+            addTableDonHang([finalData, data[1]]);
         },
         error: function(e) {
             Swal.fire({
@@ -740,21 +749,36 @@ function refreshTableDonHang() {
 function addTableDonHang(data) {
     document.getElementById("t").textContent += `${data[1]}`;
     var tc = document.getElementsByClassName('donhang')[0].getElementsByClassName('table-content')[0];
-    var s = `<table class="table-outline hideImg">`;
     const bills = data[0];
+    TONGTIEN = 0;
+    var s = `<table class="table-outline hideInfo">`;
 
     TONGTIEN = 0;
     for (var i = 0; i < bills.length; i++) {
         var d = bills[i];
-        d.TrangThai = d.TrangThai === '1' ? 'Đã xác nhận' : '';
+        d.TrangThaiDonHang = d.TrangThai === '1' ? 'Đã xác nhận' : 'Chờ xử lý';
+        let h = ``
+        for (var y = 0; y < d.thongTinChiTiet.length; y++) {
+            h += `<div>
+                    <p> Tên sản phẩm: ` + d.thongTinChiTiet[y].TenSP + `</p>
+                    <p> Đơn giá: ` + d.thongTinChiTiet[y].DonGia + `</p>
+                    <p> Số lượng: ` + d.thongTinChiTiet[y].SoLuong + `</p>
+                    <img src="` +  d.thongTinChiTiet[y].HinhAnh + `"></img>
+                </div>`
+        }
         s += `<tr>
             <td style="width: 5%">` + (i + 1) + `</td>
             <td style="width: 7%">` + d.MaHD + `</td>
             <td style="width: 20%">` + `<div>Tên: ${d.Ten}</div><div>Giới tính: ${d.GioiTinh}</div><div>SĐT: ${d.sdtND}</div><div>Email: ${d.Email}</div>` + `</td>
             <td style="width: 20%">` + `<div>Tên: ${d.NguoiNhan}</div><div>SĐT: ${d.SDT}</div><div>Địa chỉ: ${d.DiaChi}</div><div>PTTT: ${d.PhuongThucTT}</div>` + `</td>
-            <td style="width: 15%">` + d.TongTien + `</td>
+            <td style="width: 15%; color:` + `${d.TongTien > 100000000 &&  d.TrangThai !== '1' ? 'red' : '#e4e7ea' }"` + ` onmouseover="xemthongtin('` + d.MaHD + `')">
+            ` + d.TongTien + `
+                <div class="bill" id="bill`+ d.MaHD +`" onmouseover="setactive('` + d.MaHD + `')" onmouseout="deactive('` + d.MaHD + `')" data-track='hover'>
+                ` + h + `
+                </div>
+            </td>
             <td style="width: 10%">` + d.NgayLap + `</td>
-            <td style="width: 10%">` + d.TrangThai + `</td>
+            <td style="width: 10%">` + d.TrangThaiDonHang + `</td>
             <td style="width: 10%">
                 <div class="tooltip">
                     <i class="fa fa-check" onclick="duyet('` + d.MaHD + `', true)"></i>
@@ -1174,3 +1198,24 @@ function progress(percent, bg, width, height) {
 // }
 
 // console.log(JSON.stringify(list_products));
+
+function xemthongtin(id) {
+    const div = document.getElementById('bill'+id)
+    
+    if (!div.classList.toString().includes('active')) {
+        div.classList.add('active')
+        setTimeout(() => {
+            div.classList.remove('active')
+        }, 3000)
+    }
+}
+
+function setactive(id) {
+    const div = document.getElementById('bill' + id)
+    div.classList.add('onactive')
+}
+
+function deactive(id) {
+    const div = document.getElementById('bill' + id)
+    div.classList.remove('onactive')
+}
