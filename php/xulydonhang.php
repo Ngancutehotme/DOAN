@@ -8,16 +8,20 @@ if ($_POST['request'] == 'getall') {
     LEFT JOIN nguoidung AS nd ON hd.MaND = nd.MaND";
     $donHangs = (new DB_driver())->get_list($sql);
     $result = [];
+    $totalPendingInvoices = 0;
     foreach ($donHangs as $donHang) {
         $id = $donHang['MaHD'];
+        if (!$donHang['TrangThai']) {
+            $totalPendingInvoices += 1; //
+        }
         $sql ="SELECT cthd.SoLuong,cthd.DonGia, sp.TenSP, sp.HinhAnh FROM chitiethoadon AS cthd
         INNER JOIN sanpham AS sp  ON cthd.MaSP = sp.MaSP WHERE cthd.MaHD=$id";
         $chiTiet = (new DB_driver())->get_list($sql);
         $donHang['thongTinChiTiet'] = $chiTiet;
-        array_push($result,$donHang);
+        array_push($result, $donHang);
     }
 
-    die (json_encode($result));
+    die (json_encode([$result, $totalPendingInvoices]));
 } else {
     die([]);
 }

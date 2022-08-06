@@ -727,7 +727,6 @@ function refreshTableDonHang() {
         },
         success: function(data, status, xhr) {
             addTableDonHang(data);
-            console.log(730, data);
         },
         error: function(e) {
             Swal.fire({
@@ -739,12 +738,14 @@ function refreshTableDonHang() {
     });
 }
 function addTableDonHang(data) {
+    document.getElementById("t").textContent += `${data[1]}`;
     var tc = document.getElementsByClassName('donhang')[0].getElementsByClassName('table-content')[0];
     var s = `<table class="table-outline hideImg">`;
+    const bills = data[0];
 
     TONGTIEN = 0;
-    for (var i = 0; i < data.length; i++) {
-        var d = data[i];
+    for (var i = 0; i < bills.length; i++) {
+        var d = bills[i];
         d.TrangThai = d.TrangThai === '1' ? 'Đã xác nhận' : '';
         s += `<tr>
             <td style="width: 5%">` + (i + 1) + `</td>
