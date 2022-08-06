@@ -13,7 +13,8 @@ window.onload = function() {
             if(user.MaQuyen != 1) {
                 addEventChangeTab();
                 addThongKe();
-                openTab('Home');
+                refreshTableDonHang()
+                openTab('Đơn Hàng');
             }
         } else {
             document.body.innerHTML = `<h1 style="color:red; with:100%; text-align:center; margin: 50px;"> Truy cập bị từ chối.. </h1>`;
@@ -523,7 +524,7 @@ function xoaSanPham(trangthai, masp, tensp) {
 // Sửa
 function suaSanPham(masp) {
     var Sp = layThongTinSanPhamTuTable('khungSuaSanPham');
-    console.log(Sp);
+    console.log(527, Sp);
     return false;
 }
 
@@ -726,7 +727,7 @@ function refreshTableDonHang() {
         },
         success: function(data, status, xhr) {
             addTableDonHang(data);
-            console.log(data);
+            console.log(730, data);
         },
         error: function(e) {
             Swal.fire({
@@ -747,9 +748,9 @@ function addTableDonHang(data) {
         d.TrangThai = d.TrangThai === '1' ? 'Đã xác nhận' : '';
         s += `<tr>
             <td style="width: 5%">` + (i + 1) + `</td>
-            <td style="width: 13%">` + d.MaHD + `</td>
-            <td style="width: 7%">` + d.NguoiNhan + `</td>
-            <td style="width: 20%">` + d.Sanpham + `</td>
+            <td style="width: 7%">` + d.MaHD + `</td>
+            <td style="width: 20%">` + `<div>Tên: ${d.Ten}</div><div>Giới tính: ${d.GioiTinh}</div><div>SĐT: ${d.sdtND}</div><div>Email: ${d.Email}</div>` + `</td>
+            <td style="width: 20%">` + `<div>Tên: ${d.NguoiNhan}</div><div>SĐT: ${d.SDT}</div><div>Địa chỉ: ${d.DiaChi}</div><div>PTTT: ${d.PhuongThucTT}</div>` + `</td>
             <td style="width: 15%">` + d.TongTien + `</td>
             <td style="width: 10%">` + d.NgayLap + `</td>
             <td style="width: 10%">` + d.TrangThai + `</td>

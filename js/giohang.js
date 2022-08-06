@@ -219,8 +219,6 @@ function thanhToan() {
 }
 
 function htmlThanhToan(userHienTai) {
-	console.log('abc')
-
 	$("#thongtinthanhtoan").html(`
 		<form>
 		  	<div class="form-group">
@@ -354,8 +352,8 @@ function capNhatMoiThu(list) { // Mọi thứ
     // window.location = '/DoAn';
     $('#exampleModal').modal('hide')
 
-
-    localStorage.setItem('giohang', 0                                                                                                       )
+    localStorage.setItem('giohang', 0)
+    animateCartNumber()
 
     Swal.fire({
         type: "success",
