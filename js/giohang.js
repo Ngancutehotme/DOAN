@@ -219,6 +219,7 @@ function thanhToan() {
 }
 
 function htmlThanhToan(userHienTai) {
+    const disabled = userHienTai.MaQuyen === '1' ? 'style="display:none" ' : '';
 	$("#thongtinthanhtoan").html(`
 		<form>
 		  	<div class="form-group">
@@ -237,10 +238,17 @@ function htmlThanhToan(userHienTai) {
 		    <input class="form-control input-sm" id="inputDiaChi" required type="text" value="` + userHienTai.DiaChi + `">
 		  </div>
 		  <div class="form-group">
-		    <select class="browser-default custom-select" id="selectHinhThucTT">
+		    <select class="browser-default custom-select" required id="selectHinhThucTT">
 		      <option value="" disabled selected>Hình thức thanh toán</option>
-			  <option value="Trực tiếp khi nhận hàng">Trực tiếp khi nhận hàng</option>
-			  <option value="Qua thẻ ngân hàng">Qua thẻ ngân hàng</option>
+			  <option value="Tiền mặt">Thanh toán trực tiếp khi nhận hàng</option>
+			  <option value="Chuyển khoản">Thanh toán qua thẻ ngân hàng</option>
+			</select>
+		  </div>
+		  <div class="form-group " ${disabled}>
+		    <select class="browser-default custom-select" id="trangThai">
+			  <option value="0" selected>Đang chờ xử lý</option>
+			  <option value="1">Đã giao hàng</option>
+			  <option value="2">Đã hủy</option>
 			</select>
 		  </div>
 		</form>
@@ -254,6 +262,7 @@ function xacNhanThanhToan() {
 		sdtNguoiNhan: $("#inputSDT").val(),
 		diaChiNguoiNhan: $("#inputDiaChi").val(),
 		phuongThucTT: $("#selectHinhThucTT").val(),
+		trangThai: UserHienTai.MaQuyen !== '1' ? $("#trangThai").val() : 0,
 		dssp: getListGioHang(),
 		tongTien: TotalPrice,
 		ngayLap: new Date().toMysqlFormat()
