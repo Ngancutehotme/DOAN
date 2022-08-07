@@ -1,4 +1,6 @@
 var TONGTIEN = 0;
+var timer;
+
 
 window.onload = function() {
 
@@ -7,6 +9,9 @@ window.onload = function() {
             window.location.href = "login.php"
         });
     }
+
+    var donhang = document.getElementsByClassName('don-hang')[0];
+    donhang.classList.add('active');
 
     getCurrentUser((user)=>{
         if(user != null) {
@@ -726,7 +731,13 @@ function refreshTableDonHang() {
             request: "getall",
         },
         success: function(data, status, xhr) {
-            addTableDonHang(data);
+            const sortTimeData = data[0].sort((a, b) => {
+                return new Date(b.NgayLap) - new Date(a.NgayLap)
+            })
+            const finalData = sortTimeData.sort((a, b) => {
+                return a.TrangThai - b.TrangThai
+            })
+            addTableDonHang([finalData, data[1]]);
         },
         error: function(e) {
             Swal.fire({
@@ -738,23 +749,25 @@ function refreshTableDonHang() {
     });
 }
 function addTableDonHang(data) {
-    document.getElementById("t").textContent += `${data[1]}`;
+    BILLDATA = data
+    document.getElementById('total').innerHTML = `Tổng đơn cần xử lý: <p id="t">${data[1]}</p>`;
     var tc = document.getElementsByClassName('donhang')[0].getElementsByClassName('table-content')[0];
-    var s = `<table class="table-outline hideImg">`;
     const bills = data[0];
+    var s = `<table class="table-outline hideInfo"><div id="bill" class="bill" onmouseover="setactive()" onmouseout="deactive()"></div>`;
 
-    TONGTIEN = 0;
     for (var i = 0; i < bills.length; i++) {
         var d = bills[i];
-        d.TrangThai = d.TrangThai === '1' ? 'Đã xác nhận' : '';
+        d.TrangThaiDonHang = d.TrangThai === '1' ? 'Đã giao hàng' : d.TrangThai === '0' ? 'Đang chờ xử lý' : 'Đã hủy';
         s += `<tr>
             <td style="width: 5%">` + (i + 1) + `</td>
             <td style="width: 7%">` + d.MaHD + `</td>
             <td style="width: 20%">` + `<div>Tên: ${d.Ten}</div><div>Giới tính: ${d.GioiTinh}</div><div>SĐT: ${d.sdtND}</div><div>Email: ${d.Email}</div>` + `</td>
             <td style="width: 20%">` + `<div>Tên: ${d.NguoiNhan}</div><div>SĐT: ${d.SDT}</div><div>Địa chỉ: ${d.DiaChi}</div><div>PTTT: ${d.PhuongThucTT}</div>` + `</td>
-            <td style="width: 15%">` + d.TongTien + `</td>
+            <td style="width: 15%; color:` + `${d.TongTien > 100000000 &&  d.TrangThai === '0' ? 'red' : '#e4e7ea' }"` + ` onmouseover="xemthongtin(${d.MaHD})">
+            ` + parseInt(d.TongTien).toLocaleString() + `
+            </td>
             <td style="width: 10%">` + d.NgayLap + `</td>
-            <td style="width: 10%">` + d.TrangThai + `</td>
+            <td style="width: 10%">` + d.TrangThaiDonHang + `</td>
             <td style="width: 10%">
                 <div class="tooltip">
                     <i class="fa fa-check" onclick="duyet('` + d.MaHD + `', true)"></i>
@@ -767,7 +780,6 @@ function addTableDonHang(data) {
                 
             </td>
         </tr>`;
-        // TONGTIEN += stringToNum(d.tongtien);
     }
 
     s += `</table>`;
@@ -1174,3 +1186,39 @@ function progress(percent, bg, width, height) {
 // }
 
 // console.log(JSON.stringify(list_products));
+
+function xemthongtin(id) {
+    const hoadon = BILLDATA[0].find(item => item.MaHD == id )
+    const detail = hoadon.thongTinChiTiet
+    const div = document.getElementById('bill')
+    let h = ''
+    for (var y = 0; y < detail.length; y++) {
+        h += `<div class="item">
+                <p> Tên sản phẩm: ` +detail[y].TenSP + `</p>
+                <p> Đơn giá: ` + detail[y].DonGia + `</p>
+                <p> Số lượng: ` + detail[y].SoLuong + `</p>
+                <img src="` +  detail[y].HinhAnh + `"></img>
+            </div>`
+    }
+    div.innerHTML = h
+
+    div.classList.add('active')
+
+    if( timer ) {
+        clearTimeout(timer);
+    }
+    timer = setTimeout(() => {
+        div.classList.remove('active')
+    }, 3000);
+}
+
+
+function setactive() {
+    const div = document.getElementById('bill')
+    div.classList.add('onactive')
+}
+
+function deactive() {
+    const div = document.getElementById('bill')
+    div.classList.remove('onactive')
+}

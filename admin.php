@@ -42,7 +42,7 @@
             <li class="nav-title">MENU</li>
             <!-- <li class="nav-item"><a class="nav-link active"><i class="fa fa-home"></i> Home</a></li> -->
             <li class="nav-item" onclick="refreshTableSanPham()"><a class="nav-link"><i class="fa fa-th-large"></i> Sản Phẩm</a></li>
-            <li class="nav-item" onclick="refreshTableDonHang()"><a class="nav-link"><i class="fa fa-file-text-o"></i> Đơn Hàng</a></li>
+            <li class="nav-item" onclick="refreshTableDonHang()"><a class="nav-link don-hang"><i class="fa fa-file-text-o"></i> Đơn Hàng</a></li>
             <li class="nav-item" onclick="refreshTableKhachHang()"><a class="nav-link"><i class="fa fa-address-book-o"></i> Khách Hàng</a></li>
             <li class="nav-item"><a class="nav-link"><i class="fa fa-bar-chart-o"></i> Thống Kê</a></li>
             <hr>
@@ -285,8 +285,7 @@
             </div>
 
             <div class="table-footer">
-                <div class="total">
-                    Tổng đơn cần xử lý: <p id="t"></p>
+                <div id="total">
                 </div>
                 <div class="timTheoNgay">
                     Từ ngày: <input type="date" id="fromDate">
