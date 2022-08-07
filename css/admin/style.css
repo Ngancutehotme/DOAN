@@ -354,7 +354,7 @@ header h2 {
   border-right: 2px solid #777;
 }
 
-.total {
+#total {
   float: left;
   margin-top: 8px;
   margin-right: 10px;
@@ -362,7 +362,7 @@ header h2 {
   color: #e4e7ea;
 }
 
-.total #t {
+#total #t {
   display: contents;
   color: red;
 }

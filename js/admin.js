@@ -750,23 +750,21 @@ function refreshTableDonHang() {
 }
 function addTableDonHang(data) {
     BILLDATA = data
-    document.getElementById("t").textContent += `${data[1]}`;
+    document.getElementById('total').innerHTML = `Tổng đơn cần xử lý: <p id="t">${data[1]}</p>`;
     var tc = document.getElementsByClassName('donhang')[0].getElementsByClassName('table-content')[0];
     const bills = data[0];
-    TONGTIEN = 0;
     var s = `<table class="table-outline hideInfo"><div id="bill" class="bill" onmouseover="setactive()" onmouseout="deactive()"></div>`;
 
-    TONGTIEN = 0;
     for (var i = 0; i < bills.length; i++) {
         var d = bills[i];
-        d.TrangThaiDonHang = d.TrangThai === '1' ? 'Đã xác nhận' : 'Chờ xử lý';
+        d.TrangThaiDonHang = d.TrangThai === '1' ? 'Đã giao hàng' : d.TrangThai === '0' ? 'Đang chờ xử lý' : 'Đã hủy';
         s += `<tr>
             <td style="width: 5%">` + (i + 1) + `</td>
             <td style="width: 7%">` + d.MaHD + `</td>
             <td style="width: 20%">` + `<div>Tên: ${d.Ten}</div><div>Giới tính: ${d.GioiTinh}</div><div>SĐT: ${d.sdtND}</div><div>Email: ${d.Email}</div>` + `</td>
             <td style="width: 20%">` + `<div>Tên: ${d.NguoiNhan}</div><div>SĐT: ${d.SDT}</div><div>Địa chỉ: ${d.DiaChi}</div><div>PTTT: ${d.PhuongThucTT}</div>` + `</td>
-            <td style="width: 15%; color:` + `${d.TongTien > 100000000 &&  d.TrangThai !== '1' ? 'red' : '#e4e7ea' }"` + ` onmouseover="xemthongtin(${d.MaHD})">
-            ` + d.TongTien + `
+            <td style="width: 15%; color:` + `${d.TongTien > 100000000 &&  d.TrangThai === '0' ? 'red' : '#e4e7ea' }"` + ` onmouseover="xemthongtin(${d.MaHD})">
+            ` + parseInt(d.TongTien).toLocaleString() + `
             </td>
             <td style="width: 10%">` + d.NgayLap + `</td>
             <td style="width: 10%">` + d.TrangThaiDonHang + `</td>
@@ -782,7 +780,6 @@ function addTableDonHang(data) {
                 
             </td>
         </tr>`;
-        // TONGTIEN += stringToNum(d.tongtien);
     }
 
     s += `</table>`;

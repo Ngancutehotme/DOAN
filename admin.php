@@ -285,8 +285,7 @@
             </div>
 
             <div class="table-footer">
-                <div class="total">
-                    Tổng đơn cần xử lý: <p id="t"></p>
+                <div id="total">
                 </div>
                 <div class="timTheoNgay">
                     Từ ngày: <input type="date" id="fromDate">
