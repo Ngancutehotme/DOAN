@@ -135,11 +135,11 @@ header h2 {
   position: unset !important;
 }
 
-.hideInfo td .bill {
-  position: absolute;
+.table-content .bill {
+  position: fixed;
   display: none;
-  top: 0;
-  left: 0;
+  top: 182px;
+  left: 170px;
   border-radius: 5px;
   transition-duration: 0.1s;
   z-index: 2;
@@ -151,16 +151,16 @@ header h2 {
   overflow: auto;
 }
 
-.hideInfo td .active {
-  display: block;
-}
-
-.hideInfo td .onactive {
-  display: block;
-}
-
-.hideInfo td .bill img {
+.table-content .bill .item img {
   height: 150px;
+}
+
+.table-content .active {
+  display: block;
+}
+
+.table-content .onactive {
+  display: block;
 }
 
 /* Ảnh đại diện */

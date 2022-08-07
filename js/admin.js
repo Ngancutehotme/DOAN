@@ -1,4 +1,6 @@
 var TONGTIEN = 0;
+var timer;
+
 
 window.onload = function() {
 
@@ -747,35 +749,24 @@ function refreshTableDonHang() {
     });
 }
 function addTableDonHang(data) {
+    BILLDATA = data
     document.getElementById("t").textContent += `${data[1]}`;
     var tc = document.getElementsByClassName('donhang')[0].getElementsByClassName('table-content')[0];
     const bills = data[0];
     TONGTIEN = 0;
-    var s = `<table class="table-outline hideInfo">`;
+    var s = `<table class="table-outline hideInfo"><div id="bill" class="bill" onmouseover="setactive()" onmouseout="deactive()"></div>`;
 
     TONGTIEN = 0;
     for (var i = 0; i < bills.length; i++) {
         var d = bills[i];
         d.TrangThaiDonHang = d.TrangThai === '1' ? 'Đã xác nhận' : 'Chờ xử lý';
-        let h = ``
-        for (var y = 0; y < d.thongTinChiTiet.length; y++) {
-            h += `<div>
-                    <p> Tên sản phẩm: ` + d.thongTinChiTiet[y].TenSP + `</p>
-                    <p> Đơn giá: ` + d.thongTinChiTiet[y].DonGia + `</p>
-                    <p> Số lượng: ` + d.thongTinChiTiet[y].SoLuong + `</p>
-                    <img src="` +  d.thongTinChiTiet[y].HinhAnh + `"></img>
-                </div>`
-        }
         s += `<tr>
             <td style="width: 5%">` + (i + 1) + `</td>
             <td style="width: 7%">` + d.MaHD + `</td>
             <td style="width: 20%">` + `<div>Tên: ${d.Ten}</div><div>Giới tính: ${d.GioiTinh}</div><div>SĐT: ${d.sdtND}</div><div>Email: ${d.Email}</div>` + `</td>
             <td style="width: 20%">` + `<div>Tên: ${d.NguoiNhan}</div><div>SĐT: ${d.SDT}</div><div>Địa chỉ: ${d.DiaChi}</div><div>PTTT: ${d.PhuongThucTT}</div>` + `</td>
-            <td style="width: 15%; color:` + `${d.TongTien > 100000000 &&  d.TrangThai !== '1' ? 'red' : '#e4e7ea' }"` + ` onmouseover="xemthongtin('` + d.MaHD + `')">
+            <td style="width: 15%; color:` + `${d.TongTien > 100000000 &&  d.TrangThai !== '1' ? 'red' : '#e4e7ea' }"` + ` onmouseover="xemthongtin(${d.MaHD})">
             ` + d.TongTien + `
-                <div class="bill" id="bill`+ d.MaHD +`" onmouseover="setactive('` + d.MaHD + `')" onmouseout="deactive('` + d.MaHD + `')" data-track='hover'>
-                ` + h + `
-                </div>
             </td>
             <td style="width: 10%">` + d.NgayLap + `</td>
             <td style="width: 10%">` + d.TrangThaiDonHang + `</td>
@@ -1200,22 +1191,37 @@ function progress(percent, bg, width, height) {
 // console.log(JSON.stringify(list_products));
 
 function xemthongtin(id) {
-    const div = document.getElementById('bill'+id)
-    
-    if (!div.classList.toString().includes('active')) {
-        div.classList.add('active')
-        setTimeout(() => {
-            div.classList.remove('active')
-        }, 3000)
+    const hoadon = BILLDATA[0].find(item => item.MaHD == id )
+    const detail = hoadon.thongTinChiTiet
+    const div = document.getElementById('bill')
+    let h = ''
+    for (var y = 0; y < detail.length; y++) {
+        h += `<div class="item">
+                <p> Tên sản phẩm: ` +detail[y].TenSP + `</p>
+                <p> Đơn giá: ` + detail[y].DonGia + `</p>
+                <p> Số lượng: ` + detail[y].SoLuong + `</p>
+                <img src="` +  detail[y].HinhAnh + `"></img>
+            </div>`
     }
+    div.innerHTML = h
+
+    div.classList.add('active')
+
+    if( timer ) {
+        clearTimeout(timer);
+    }
+    timer = setTimeout(() => {
+        div.classList.remove('active')
+    }, 3000);
 }
 
-function setactive(id) {
-    const div = document.getElementById('bill' + id)
+
+function setactive() {
+    const div = document.getElementById('bill')
     div.classList.add('onactive')
 }
 
-function deactive(id) {
-    const div = document.getElementById('bill' + id)
+function deactive() {
+    const div = document.getElementById('bill')
     div.classList.remove('onactive')
 }
