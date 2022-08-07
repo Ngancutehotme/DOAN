@@ -262,7 +262,7 @@ function addTableProducts(list_products) {
             <td style="width: 5%">` + (i + 1) + `</td>
             <td style="width: 10%">` + p.MaSP + `</td>
             <td style="width: 40%">
-                <a title="Xem chi tiết" target="_blank" href="chitietsanpham.php?` + p.TenSP.split(' ').join('-') + `">` + p.TenSP + `</a>
+                <a title="Xem chi tiết" target="_blank" href="chitietsanpham.php?` + p.MaSP + `">` + p.TenSP + `</a>
                 <img src="` + p.HinhAnh + `"></img>
             </td>
             <td style="width: 15%">` + parseInt(p.DonGia).toLocaleString() + `</td>
@@ -758,6 +758,7 @@ function addTableDonHang(data) {
     for (var i = 0; i < bills.length; i++) {
         var d = bills[i];
         d.TrangThaiDonHang = d.TrangThai === '1' ? 'Đã giao hàng' : d.TrangThai === '0' ? 'Đang chờ xử lý' : 'Đã hủy';
+        var statusColor = d.TrangThai === '1' ? 'green' : d.TrangThai === '0' ? '#20a8d8' : '#e4e7ea';
         s += `<tr>
             <td style="width: 5%">` + (i + 1) + `</td>
             <td style="width: 7%">` + d.MaHD + `</td>
@@ -767,14 +768,14 @@ function addTableDonHang(data) {
             ` + parseInt(d.TongTien).toLocaleString() + `
             </td>
             <td style="width: 10%">` + d.NgayLap + `</td>
-            <td style="width: 10%">` + d.TrangThaiDonHang + `</td>
+            <td style="width: 10%; color: ${statusColor}">` + d.TrangThaiDonHang + `</td>
             <td style="width: 10%">
                 <div class="tooltip">
-                    <i class="fa fa-check" onclick="duyet('` + d.MaHD + `', true)"></i>
+                    <i class="fa fa-check" onclick="duyet('` + d.MaHD + `', ${d.TrangThai} , true)"></i>
                     <span class="tooltiptext">Duyệt</span>
                 </div>
                 <div class="tooltip">
-                    <i class="fa fa-remove" onclick="duyet('` + d.MaHD + `', false)"></i>
+                    <i class="fa fa-remove" onclick="duyet('` + d.MaHD + `', ${d.TrangThai}, false)"></i>
                     <span class="tooltiptext">Hủy</span>
                 </div>
                 
@@ -823,39 +824,44 @@ function getListDonHang() {
 }
 
 // Duyệt
-function duyet(maDonHang, duyetDon) {
-    var u = getListUser();
-    for (var i = 0; i < u.length; i++) {
-        for (var j = 0; j < u[i].donhang.length; j++) {
-            if (u[i].donhang[j].ngaymua == maDonHang) {
-                if (duyetDon) {
-                    if (u[i].donhang[j].tinhTrang == 'Đang chờ xử lý') {
-                        u[i].donhang[j].tinhTrang = 'Đã giao hàng';
-
-                    } else if (u[i].donhang[j].tinhTrang == 'Đã hủy') {
-                        alert('Không thể duyệt đơn đã hủy !');
-                        return;
-                    }
-                } else {
-                    if (u[i].donhang[j].tinhTrang == 'Đang chờ xử lý') {
-                        if (window.confirm('Bạn có chắc muốn hủy đơn hàng này. Hành động này sẽ không thể khôi phục lại !'))
-                            u[i].donhang[j].tinhTrang = 'Đã hủy';
-
-                    } else if (u[i].donhang[j].tinhTrang == 'Đã giao hàng') {
-                        alert('Không thể hủy đơn hàng đã giao !');
-                        return;
-                    }
+function duyet(maDonHang, trangThai, duyetDon) {
+    if (duyetDon) {
+        if (trangThai === 0) {
+            Swal.fire({
+            type: 'info',
+            title: `Bạn có muốn duyệt đơn hàng mã ${maDonHang}?`,
+            showCancelButton: true
+            }).then((result) => {
+                if(result.value) {
+                    console.log('duyet');
+                    // call api duyet
                 }
-                break;
-            }
+            })
+        } else {
+            Swal.fire({
+                type: "error",
+                title: "Bạn không thể duyệt đơn đã duyệt hoặc đã hủy.",
+            });
+        }
+    } else {
+        if (trangThai === 0 || trangThai === 1) {
+            Swal.fire({
+                type: 'warning',
+                title: `Bạn có muốn hủy đơn hàng mã ${maDonHang}?`,
+                showCancelButton: true
+            }).then((result) => {
+                if(result.value) {
+                    console.log('huy');
+                    // call api huy
+                }
+            })
+        } else {
+            Swal.fire({
+                type: "error",
+                title: "Bạn không thể hủy đơn đã hủy.",
+            });
         }
     }
-
-    // lưu lại
-    setListUser(u);
-
-    // vẽ lại
-    addTableDonHang();
 }
 
 function locDonHangTheoKhoangNgay() {
@@ -1195,7 +1201,7 @@ function xemthongtin(id) {
     for (var y = 0; y < detail.length; y++) {
         h += `<div class="item">
                 <p> Tên sản phẩm: ` +detail[y].TenSP + `</p>
-                <p> Đơn giá: ` + detail[y].DonGia + `</p>
+                <p> Đơn giá: ` + parseInt(detail[y].DonGia).toLocaleString() + ` VND</p>
                 <p> Số lượng: ` + detail[y].SoLuong + `</p>
                 <img src="` +  detail[y].HinhAnh + `"></img>
             </div>`
