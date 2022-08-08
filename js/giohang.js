@@ -295,7 +295,12 @@ function xoaHet() {
         }).then((result) => {
             if (result.value) {
                 listProduct = [];
-                capNhatMoiThu(listProduct);
+                setListGioHang([]);
+                getListFromDB([]);
+                Swal.fire({
+                    type: "success",
+                    title: "Xóa thành công giỏ hàng!"
+                })
             }
         })
     }
@@ -314,7 +319,8 @@ function capNhatSoLuongFromInput(inp, masp) {
         }
     }
 
-    capNhatMoiThu(listProduct);
+    setListGioHang(listProduct);
+    getListFromDB(listProduct);
 }
 
 function tangSoLuong(masp) {
@@ -326,7 +332,8 @@ function tangSoLuong(masp) {
         }
     }
 
-    capNhatMoiThu(listProduct);
+    setListGioHang(listProduct);
+    getListFromDB(listProduct);
 }
 
 function giamSoLuong(masp) {
@@ -338,13 +345,12 @@ function giamSoLuong(masp) {
         }
     }
 
-    capNhatMoiThu(listProduct);
+    setListGioHang(listProduct);
+    getListFromDB(listProduct);
 }
 
 function capNhatMoiThu(list) { // Mọi thứ
     animateCartNumber();
-
-    setListGioHang(list);
 
     // cập nhật danh sách sản phẩm ở table
     getListFromDB(list);
