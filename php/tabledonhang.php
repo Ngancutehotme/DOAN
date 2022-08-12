@@ -12,7 +12,6 @@
 			echo '<table class="table table-striped" >
 				<tr style="text-align:center;vertical-align:middle;font-size:20px;background-color:coral;color:black!important">
 				<th  style="font-weight:600">Mã đơn hàng</th>
-				<th  style="font-weight:600">Mã người dùng</th>
 				<th  style="font-weight:600">Ngày lập</th>
 				<th  style="font-weight:600">Người nhận</th>
 				<th  style="font-weight:600">SDT</th>
@@ -20,20 +19,22 @@
 				<th  style="font-weight:600">Phương thức TT</th>
 				<th  style="font-weight:600">Tổng tiền</th>
 				<th  style="font-weight:600">Trạng thái</th>
+				<th  style="font-weight:600">Mã người dùng</th>
 				<th  style="font-weight:600">Xem chi tiết</th>
 			</tr>';
 
 			forEach($dsdh as $row) {
+				$trangThaiDonHang = formatStatuses($row["TrangThai"]);
 					echo '<tr>
 						<td  style="text-align:center;vertical-align:middle;">'.$row["MaHD"].'</td>
-						<td  style="text-align:center;vertical-align:middle;">'.$row["MaND"].'</td>
 						<td  style="text-align:center;vertical-align:middle;">'.$row["NgayLap"].'</td>
 						<td  style="text-align:center;vertical-align:middle;">'.$row["NguoiNhan"].'</td>
 						<td  style="text-align:center;vertical-align:middle;">'.$row["SDT"].'</td>
 						<td  style="text-align:center;vertical-align:middle;">'.$row["DiaChi"].'</td>
 						<td  style="text-align:center;vertical-align:middle;">'.$row["PhuongThucTT"].'</td>
 						<td  style="text-align:center;vertical-align:middle;">'.$row["TongTien"].'</td>
-						<td  style="text-align:center;vertical-align:middle;">'.$row["TrangThai"].'</td>
+						<td  style="text-align:center;vertical-align:middle;">'.$trangThaiDonHang.'</td>
+						<td  style="text-align:center;vertical-align:middle;">'.$row["MaND"].'</td>
 						<td  style="text-align:center;vertical-align:middle;">
 							<button data-toggle="modal" data-target="#exampleModal" onclick="xemChiTiet(\''.$row["MaHD"].'\')">Xem</button>
 						</td>
@@ -47,5 +48,21 @@
 						<a href="index.php" style="color:blue">Mua ngay</a>
 					</h2>';
 		}
+	}
+
+	function formatStatuses($status) {
+		switch ($status) {
+			case '0':
+				return 'Chờ xác nhận';
+			case '1':
+				return 'Chờ chuẩn bị hàng';
+			case '2':
+				return 'Đang giao'; 
+			case '3':
+				return 'Đã giao';
+			case '4':
+				return 'Đã hủy';
+		}
+		return 'Status error';
 	}
 ?>

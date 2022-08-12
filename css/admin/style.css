@@ -348,7 +348,7 @@ header h2 {
 /* Div Tìm theo ngày */
 .timTheoNgay {
   float: left;
-  margin-right: 50px;
+  margin-right: 20px;
   padding-right: 10px;
   color: #e4e7ea;
   border-right: 2px solid #777;
@@ -357,14 +357,12 @@ header h2 {
 #total {
   float: left;
   margin-top: 8px;
-  margin-right: 10px;
   padding-right: 10px;
   color: #e4e7ea;
 }
 
-#total #t {
+#total #element {
   display: contents;
-  color: red;
 }
 
 /* ========================== Thong ke ========================= */
