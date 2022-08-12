@@ -750,15 +750,22 @@ function refreshTableDonHang() {
 }
 function addTableDonHang(data) {
     BILLDATA = data
-    document.getElementById('total').innerHTML = `Tổng đơn cần xử lý: <p id="t">${data[1]}</p>`;
+    console
+    document.getElementById('total').innerHTML = `Tổng đơn cần xử lý: 
+    <p id="element" style="color: rgb(211 211 211)">${data[1].soDonChoXacNhan}</p>
+    <p id="element" style="color: rgb(64 148 246)">${data[1].soDonChoChuanBiHang}</p>
+    <p id="element" style="color: rgb(168 117 255)">${data[1].soDonDangGiao}</p>
+    <p id="element" style="color: rgb(107 201 79)">${data[1].soDonDaGiao}</p>
+    <p id="element" style="color: rgb(248 27 6)">${data[1].soDonHuy}</p>
+    `;
     var tc = document.getElementsByClassName('donhang')[0].getElementsByClassName('table-content')[0];
     const bills = data[0];
     var s = `<table class="table-outline hideInfo"><div id="bill" class="bill" onmouseover="setactive()" onmouseout="deactive()"></div>`;
 
     for (var i = 0; i < bills.length; i++) {
         var d = bills[i];
-        d.TrangThaiDonHang = d.TrangThai === '1' ? 'Đã giao hàng' : d.TrangThai === '0' ? 'Đang chờ xử lý' : 'Đã hủy';
-        var statusColor = d.TrangThai === '1' ? 'green' : d.TrangThai === '0' ? '#20a8d8' : '#e4e7ea';
+        d.TrangThaiDonHang = formatStatuses(d.TrangThai)
+        var statusColor = formatStatusColor(d.TrangThai)
         s += `<tr>
             <td style="width: 5%">` + (i + 1) + `</td>
             <td style="width: 7%">` + d.MaHD + `</td>
@@ -826,33 +833,34 @@ function getListDonHang() {
 // Duyệt
 function duyet(maDonHang, trangThai, duyetDon) {
     if (duyetDon) {
-        if (trangThai === 0) {
+        const valStatus = trangThai+1
+        const status = formatStatuses(valStatus.toString())
+        if (trangThai !== 4) {
             Swal.fire({
             type: 'info',
-            title: `Bạn có muốn duyệt đơn hàng mã ${maDonHang}?`,
+            title: `Bạn có muốn chuuyển trạng thái đơn hàng mã ${maDonHang} thành '${status}'?`,
             showCancelButton: true
             }).then((result) => {
                 if(result.value) {
-                    console.log('duyet');
-                    // call api duyet
+                    updateStatusBill(maDonHang, valStatus)
                 }
             })
         } else {
             Swal.fire({
                 type: "error",
-                title: "Bạn không thể duyệt đơn đã duyệt hoặc đã hủy.",
+                title: "Bạn không thể duyệt đơn đã hủy.",
             });
         }
     } else {
-        if (trangThai === 0 || trangThai === 1) {
+        const trangThaiHuy = '4'
+        if (trangThai !== parseInt(trangThaiHuy)) {
             Swal.fire({
                 type: 'warning',
                 title: `Bạn có muốn hủy đơn hàng mã ${maDonHang}?`,
                 showCancelButton: true
             }).then((result) => {
                 if(result.value) {
-                    console.log('huy');
-                    // call api huy
+                    updateStatusBill(maDonHang, trangThaiHuy)
                 }
             })
         } else {
@@ -987,7 +995,6 @@ function thayDoiTrangThaiND(inp, mand) {
         }
     });
 }
-
 
 function addTableKhachHang(data) {
     var tc = document.getElementsByClassName('khachhang')[0].getElementsByClassName('table-content')[0];
@@ -1227,4 +1234,33 @@ function setactive() {
 function deactive() {
     const div = document.getElementById('bill')
     div.classList.remove('onactive')
+}
+
+function updateStatusBill(id, status) {
+	$.ajax({
+		type: "POST",
+		url: "php/xulydonhang.php",
+		dataType: "json",
+		data: {
+			request: "updateStatus",
+            id,
+            status
+		},
+		success: function(data) {
+            Swal.fire({
+                type: "success",
+                title: "Duyệt đơn thành công",
+            }).then(function() {
+                window.location.reload();
+            });
+		},
+		error: function(e) {
+            Swal.fire({
+                type: "error",
+                title: "Duyệt đơn thất bại",
+                html: e.responseText
+            });
+		}
+
+	})
 }
