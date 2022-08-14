@@ -725,12 +725,10 @@ function formatStatuses(statuses) {
         case '0':
             return 'Chờ xác nhận';
         case '1':
-            return 'Chờ chuẩn bị hàng';
-        case '2':
             return 'Đang giao'; 
-        case '3':
+        case '2':
             return 'Đã giao';
-        case '4':
+        case '3':
             return 'Đã hủy';
     }
     return 'Status error';
@@ -739,14 +737,12 @@ function formatStatuses(statuses) {
 function formatStatusColor(statuses) {
     switch (statuses) {
         case '0':
-            return 'rgb(211 211 211)';
-        case '1':
             return 'rgb(64 148 246)';
-        case '2':
+        case '1':
             return 'rgb(168 117 255)'; 
-        case '3':
+        case '2':
             return 'rgb(107 201 79)';
-        case '4':
+        case '3':
             return 'rgb(248 27 6)';
     }
     return '';

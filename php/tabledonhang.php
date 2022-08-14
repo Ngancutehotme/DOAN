@@ -55,12 +55,10 @@
 			case '0':
 				return 'Chờ xác nhận';
 			case '1':
-				return 'Chờ chuẩn bị hàng';
-			case '2':
 				return 'Đang giao'; 
-			case '3':
+			case '2':
 				return 'Đã giao';
-			case '4':
+			case '3':
 				return 'Đã hủy';
 		}
 		return 'Status error';
