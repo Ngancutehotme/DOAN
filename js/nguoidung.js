@@ -1,28 +1,20 @@
 var currentUser;
 var tongTienTatCaDonHang = 0; // lưu tổng tiền từ tất cả các đơn hàng đã mua
 var tongSanPhamTatCaDonHang = 0;
+var DSDH = []
 
 window.onload = function () {
     khoiTao();
+    addEventChangeTab();
 
     // thêm tags (từ khóa) vào khung tìm kiếm
     var tags = ["Samsung", "iPhone", "Huawei", "Oppo", "Mobi"];
     for (var t of tags) addTags(t, "index.php?search=" + t);
 
     getCurrentUser((data) => {
+        console.log(data);
         if(data) {
-
-            $.ajax({
-                type: "GET",
-                url: "php/tabledonhang.php",
-                success: function(data) {
-                    $(".listDonHang").html(data);
-                },
-                error: function(e) {
-                    console.log(e.responseText);
-                }
-            })
-
+            locdonhang(-1)
         } else {
             var warning = `<h2 style="color: red; font-weight:bold; text-align:center; font-size: 2em; padding: 50px;">
                             Bạn chưa đăng nhập !!
@@ -33,6 +25,10 @@ window.onload = function () {
     }, (e)=> {
         console.log(e.responseText);
     })
+}
+
+function test(data) {
+    DSDH = data;
 }
 
 function xemChiTiet(mahd) {
@@ -62,7 +58,7 @@ function addInfoUser(user) {
         </tr>
         <tr>
             <td>Tài khoản: </td>
-            <td> <input type="text" value="` + user.username + `" readonly> </td>
+            <td> <input type="text" value=" + user.username + " readonly> </td>
             <td> <i class="fa fa-pencil" onclick="changeInfo(this, 'username')"></i> </td>
         </tr>
         <tr>
@@ -98,17 +94,17 @@ function addInfoUser(user) {
         </tr>
         <tr>
             <td>Họ: </td>
-            <td> <input type="text" value="` + user.ho + `" readonly> </td>
+            <td> <input type="text" value=" + user.ho + " readonly> </td>
             <td> <i class="fa fa-pencil" onclick="changeInfo(this, 'ho')"></i> </td>
         </tr>
         <tr>
             <td>Tên: </td>
-            <td> <input type="text" value="` + user.ten + `" readonly> </td>
+            <td> <input type="text" value=" + user.ten + " readonly> </td>
             <td> <i class="fa fa-pencil" onclick="changeInfo(this, 'ten')"></i> </td>
         </tr>
         <tr>
             <td>Email: </td>
-            <td> <input type="text" value="` + user.email + `" readonly> </td>
+            <td> <input type="text" value=" + user.email + " readonly> </td>
             <td> <i class="fa fa-pencil" onclick="changeInfo(this, 'email')"></i> </td>
         </tr>
         <tr>
@@ -121,7 +117,7 @@ function addInfoUser(user) {
         </tr>
         <tr>
             <td>Số lượng sản phẩm đã mua: </td>
-            <td> <input type="text" value="` + tongSanPhamTatCaDonHang + `" readonly> </td>
+            <td> <input type="text" value=" + tongSanPhamTatCaDonHang + " readonly> </td>
             <td></td>
         </tr>
     </table>`;
@@ -204,7 +200,7 @@ function changeInfo(iTag, info) {
             if (!currentUser.donhang.length) {
                 document.getElementsByClassName('listDonHang')[0].innerHTML = `
                     <h3 style="width=100%; padding: 50px; color: green; font-size: 2em; text-align: center"> 
-                        Xin chào ` + inp.value + `. Bạn chưa có đơn hàng nào.
+                        Xin chào  + inp.value + . Bạn chưa có đơn hàng nào.
                     </h3>`;
             }
 
@@ -256,7 +252,7 @@ function addTatCaDonHang(user) {
     if (!user.donhang.length) {
         document.getElementsByClassName('listDonHang')[0].innerHTML = `
             <h3 style="width=100%; padding: 50px; color: green; font-size: 2em; text-align: center"> 
-                Xin chào ` + currentUser.username + `. Bạn chưa có đơn hàng nào.
+                Xin chào  + currentUser.username + . Bạn chưa có đơn hàng nào.
             </h3>`;
         return;
     }
@@ -298,13 +294,13 @@ function addDonHang(dh) {
                     <td>` + (i + 1) + `</td>
                     <td class="noPadding imgHide">
                         <a target="_blank" href="chitietsanpham.php?` + p.name.split(' ').join('-') + `" title="Xem chi tiết">
-                            ` + p.name + `
-                            <img src="` + p.img + `">
+                             + p.name + 
+                            <img src=" + p.img + ">
                         </a>
                     </td>
                     <td class="alignRight">` + price + ` ₫</td>
                     <td class="soluong" >
-                         ` + soluongSp + `
+                          + soluongSp + 
                     </td>
                     <td class="alignRight">` + numToString(thanhtien) + ` ₫</td>
                     <td style="text-align: center" >` + thoigian + `</td>
@@ -319,10 +315,55 @@ function addDonHang(dh) {
                 <tr style="font-weight:bold; text-align:center; height: 4em;">
                     <td colspan="4">TỔNG TIỀN: </td>
                     <td class="alignRight">` + numToString(totalPrice) + ` ₫</td>
-                    <td > ` + dh.tinhTrang + ` </td>
+                    <td >  + dh.tinhTrang +  </td>
                 </tr>
             </table>
             <hr>
         `;
     div.innerHTML += s;
+}
+
+function locdonhang(status) {
+    $.ajax({
+        type: "GET",
+        url: "php/tabledonhang.php",
+        data: {
+            status
+        },
+        success: function(data) {
+            $(".listDonHang").html(data);
+        },
+        error: function(e) {
+            console.log(e.responseText);
+        }
+    })
+}
+
+function addEventChangeTab() {
+    var status = {
+        tatca: -1,
+        choxacnhan: 0,
+        danggiao: 1,
+        dagiao: 2,
+        dahuy: 3
+    }
+    var tab = document.getElementsByClassName('menutab')[0];
+    var list_span = tab.getElementsByTagName('span');
+    for (var span of list_span) {
+        if (!span.onclick) {
+            span.addEventListener('click', function() {
+                turnOff_Active();
+                this.classList.add('active');
+                locdonhang(status[this.id])
+            })
+        }
+    }
+}
+
+function turnOff_Active() {
+    var tab = document.getElementsByClassName('menutab')[0];
+    var list_span = tab.getElementsByTagName('span');
+    for (var spab of list_span) {
+        spab.classList.remove('active');
+    }
 }
