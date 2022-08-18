@@ -9,7 +9,7 @@ if (isset($_SESSION['currentUser']) && $_POST['request'] == "getall") {
 
 	$manguoidung = $_SESSION['currentUser']['MaND'];
 
-	$sql = "SELECT hd.NgayLap, hd.PhuongThucTT, hd.TongTien, hd.TrangThai, 
+	$sql = "SELECT hd.MaHD, hd.NgayLap, hd.PhuongThucTT, hd.TongTien, hd.TrangThai, 
 	cthd.SoLuong, cthd.DonGia, 
 	sp.TenSP, sp.HinhAnh, sp.MaKM,
 	km.LoaiKM, km.GiaTriKM

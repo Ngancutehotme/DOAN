@@ -2,17 +2,12 @@
 	require_once ("../BackEnd/ConnectionDB/DB_classes.php");
 	session_start();
 
-	$status = $_GET['status'];
+	$data = $_GET['dsdh'];
 	if (isset($_SESSION['currentUser'])) {
 
-		$manguoidung = $_SESSION['currentUser']['MaND'];
-	
-		$sql="SELECT * FROM hoadon WHERE MaND=$manguoidung";
-		$dsdh=(new DB_driver())->get_list($sql);
-
-		if(sizeof($dsdh) > 0) {
+		if(sizeof($data) > 0) {
 			echo'<div class="my-bill">';
-			forEach($dsdh as $index => $row) {
+			forEach($data as $index => $row) {
 				$class = $index === 0 ? '-first' : '';
 				$trangThaiDonHang = formatStatuses($row["TrangThai"]);
 				echo '<div class="item '.$class.'">
@@ -22,11 +17,11 @@
 						<span class="status">'.$trangThaiDonHang.'</span>
 					</div>
 					<div class="content">
-						<img src="img/logo.jpg" class="image">
+						<img src="'.$row["HinhAnh"].'" class="image">
 						<div class="info">
-							<p>Tên sản phẩm: </p>
-							<p>Số lượng: </p>
-							<p class="price">99999vnd </p>
+							<p>Tên sản phẩm: '.$row["TenSP"].'</p>
+							<p>Số lượng: '.$row["SoLuong"].'</p>
+							<p class="price">'.$row["DonGia"].'vnd </p>
 						</div>
 					</div>
 				</div>

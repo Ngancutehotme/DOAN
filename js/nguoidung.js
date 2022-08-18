@@ -1,7 +1,7 @@
 var currentUser;
 var tongTienTatCaDonHang = 0; // lưu tổng tiền từ tất cả các đơn hàng đã mua
 var tongSanPhamTatCaDonHang = 0;
-var DSDH = []
+let DSDH = []
 
 window.onload = function () {
     khoiTao();
@@ -14,7 +14,21 @@ window.onload = function () {
     getCurrentUser((data) => {
         console.log(data);
         if(data) {
-            locdonhang(-1)
+            $.ajax({
+                type: "POST",
+                url: "php/getdonhang.php",
+                dataType: "json",
+                data: {
+                    request: "getall",
+                },
+                success: function(data) {
+                    DSDH = data
+                    locdonhang(-1)
+                },
+                error: function(e) {
+                    console.log(e.responseText);
+                }
+            })
         } else {
             var warning = `<h2 style="color: red; font-weight:bold; text-align:center; font-size: 2em; padding: 50px;">
                             Bạn chưa đăng nhập !!
@@ -324,11 +338,16 @@ function addDonHang(dh) {
 }
 
 function locdonhang(status) {
+    let currentData = DSDH
+    if (status > -1) {
+        currentData = currentData.filter(data => data.TrangThai == status)
+    }
+
     $.ajax({
         type: "GET",
         url: "php/tabledonhang.php",
         data: {
-            status
+            dsdh: currentData
         },
         success: function(data) {
             $(".listDonHang").html(data);
