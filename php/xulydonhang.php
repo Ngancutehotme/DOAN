@@ -11,7 +11,7 @@ if ($_POST['request'] == 'getall') {
     $donHangs = $db->get_list($sql);
     $result = [];
     $total = [];
-    $total['soDonHuy'] = $total['soDonChoXacNhan'] = $total['soDonChoChuanBiHang'] = $total['soDonDangGiao'] = $total['soDonDaGiao'] = 0;
+    $total['soDonHuy'] = $total['soDonChoXacNhan'] = $total['soDonDangGiao'] = $total['soDonDaGiao'] = 0;
     foreach ($donHangs as $donHang) {
         $id = $donHang['MaHD'];
         switch ($donHang['TrangThai']) {

@@ -46,7 +46,16 @@
 		<?php addHeader(); ?>
 
 		<div class="infoUser"> </div>
-		<div class="listDonHang"> </div>
+		<div class="menutab">
+			<span id="tatca" class="active">Tất cả</span>
+			<span id="choxacnhan">Chờ xác nhận</span>
+			<span id="danggiao">Đang giao</span>
+			<span id="dagiao">Đã giao</span>
+			<span id="dahuy">Đã huỷ</span>
+		</div>
+		<div class="listDonHang">
+			<div class="my-bill"></div>
+		</div>
 
 		<div class="modal fade" id="exampleModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 			<div class="modal-dialog" role="document">
