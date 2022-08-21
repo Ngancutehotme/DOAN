@@ -750,10 +750,8 @@ function refreshTableDonHang() {
 }
 function addTableDonHang(data) {
     BILLDATA = data
-    console
     document.getElementById('total').innerHTML = `Tổng đơn cần xử lý: 
-    <p id="element" style="color: rgb(211 211 211)">${data[1].soDonChoXacNhan}</p>
-    <p id="element" style="color: rgb(64 148 246)">${data[1].soDonChoChuanBiHang}</p>
+    <p id="element" style="color: rgb(64 148 246)">${data[1].soDonChoXacNhan}</p>
     <p id="element" style="color: rgb(168 117 255)">${data[1].soDonDangGiao}</p>
     <p id="element" style="color: rgb(107 201 79)">${data[1].soDonDaGiao}</p>
     <p id="element" style="color: rgb(248 27 6)">${data[1].soDonHuy}</p>
