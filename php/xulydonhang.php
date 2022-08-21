@@ -19,15 +19,12 @@ if ($_POST['request'] == 'getall') {
                 $total['soDonChoXacNhan'] += 1;
                 break;
             case '1':
-                $total['soDonChoChuanBiHang'] += 1;
-                break;
-            case '2':
                 $total['soDonDangGiao'] += 1;
                 break;
-            case '3':
+            case '2':
                 $total['soDonDaGiao'] += 1;
                 break;
-            case '4':
+            case '3':
                 $total['soDonHuy'] += 1;
                 break;
         }
