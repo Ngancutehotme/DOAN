@@ -41,9 +41,6 @@ window.onload = function () {
     })
 }
 
-function test(data) {
-    DSDH = data;
-}
 
 function xemChiTiet(mahd) {
     $.ajax({
@@ -342,20 +339,40 @@ function locdonhang(status) {
     if (status > -1) {
         currentData = currentData.filter(data => data.TrangThai == status)
     }
+    let donhang = '';
+    if (!currentData.length) {
+        $(".my-bill").html('');
+        return
+    }
+    currentData.forEach((item, index) => {
+        const classFirst = index === 0 ? '-first' : '';
+		const trangThaiDonHang = formatStatuses(item.TrangThai);
+        donhang +=`<div class="item ${classFirst}">
+					<div class="head">
+						<span class="id">Mã đơn hàng: ${item.MaDH}</span>
+						<span class="time">Thời gian: ${item.NgayLap}</span>
+						<span class="status">${trangThaiDonHang}</span>
+					</div>
+					<div class="content">
+						<img src="${item.HinhAnh}" class="image">
+						<div class="info">
+							<p>Tên sản phẩm: ${item.TenSP}</p>
+							<p>Số lượng: ${item.SoLuong}</p>
+							<p class="price">${parseInt(item.DonGia).toLocaleString()} VND </p>
+						</div>
+					</div>
+				</div>
+				<div class="contact">
+				<div class="total">Tổng tiền: ${parseInt(item.TongTien).toLocaleString()} VND</div>
+				<div class="action">
+					<button class="buy">Mua lại</button>
+					<button>Liên hệ người bán</button>
+				</div>
+			</div>
+		</div>`
+    });
 
-    $.ajax({
-        type: "GET",
-        url: "php/tabledonhang.php",
-        data: {
-            dsdh: currentData
-        },
-        success: function(data) {
-            $(".listDonHang").html(data);
-        },
-        error: function(e) {
-            console.log(e.responseText);
-        }
-    })
+    $(".my-bill").html(donhang);
 }
 
 function addEventChangeTab() {
@@ -385,4 +402,18 @@ function turnOff_Active() {
     for (var spab of list_span) {
         spab.classList.remove('active');
     }
+}
+
+function formatStatuses($status) {
+    switch ($status) {
+        case '0':
+            return 'CHỜ XÁC NHẬN';
+        case '1':
+            return 'ĐANG GIAO'; 
+        case '2':
+            return 'ĐÃ GIAO';
+        case '3':
+            return 'ĐÃ HUỶ';
+    }
+    return 'Status error';
 }

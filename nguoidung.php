@@ -53,7 +53,9 @@
 			<span id="dagiao">Đã giao</span>
 			<span id="dahuy">Đã huỷ</span>
 		</div>
-		<div class="listDonHang"> </div>
+		<div class="listDonHang">
+			<div class="my-bill"></div>
+		</div>
 
 		<div class="modal fade" id="exampleModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 			<div class="modal-dialog" role="document">
