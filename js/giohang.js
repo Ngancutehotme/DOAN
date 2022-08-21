@@ -277,6 +277,7 @@ function xacNhanThanhToan() {
 			dulieu: dulieu
 		},
 		success: function(data) {
+            sendMallToAdmin(data);
 			capNhatMoiThu([]);
 		},
 		error: function(e) {
@@ -286,6 +287,26 @@ function xacNhanThanhToan() {
 	})
 
 	return false;
+}
+
+function sendMallToAdmin(data) {
+    console.log(293, data);
+	$.ajax({
+		type: "POST",
+		url: "sendMail.php",
+		dataType: "json",
+		data: {
+			request: "sendmail",
+			data,
+		},
+		success: function(data) {
+			capNhatMoiThu([]);
+		},
+		error: function(e) {
+			console.log(e.responseText)
+		}
+
+	})
 }
 
 function xoaHet() {
