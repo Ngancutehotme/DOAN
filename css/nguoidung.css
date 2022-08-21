@@ -124,7 +124,7 @@
     content: '';
     height: 25px;
     width: 1px;
-    border: solid #f1f1f1;
+    border: solid 1px #f1f1f1;
 }
 
 .item .content {
@@ -192,6 +192,10 @@
     border-color: #ee4d2d;
 }
 
+.contact .action > button:focus {
+    outline: none;
+}
+
 .menutab {
     display: flex;
     align-items: center;
@@ -223,13 +227,217 @@
 
 .menu {
     width: 200px;
+    padding: 10px;
 }
 
-.maincontent {
+.menu .item {
+    padding: 0;
+    margin: 0;
+}
+
+.menu .item .link {
+    margin: 0;
+    margin-left: 25px;
+    cursor: pointer;
+}
+
+.menu .bill {
+    cursor: pointer;
+}
+
+.menu .fa {
+    width: 25px;
+    color: #ee4d2d;
+}
+
+.main {
     width: 100%;
     display: flex;
 }
 
 .content {
     width: calc(100% - 200px);
+}
+
+#avatar{
+    margin-bottom: 20px;
+}
+
+#avatar > img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 20px;
+}
+
+.profile {
+    padding: 10px 20px;
+}
+
+.profile > .info {
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(0,0,0,.12);
+}
+
+.profile .form .field {
+    margin-bottom: 15px;
+}
+
+.profile .form .field > label {
+    display: inline-flex;
+    justify-content: end;
+    width: 170px;
+    padding-right: 20px;
+}
+
+.profile .form .field > input {
+    padding: 3px 10px;
+    height: 40px;
+    border: 1px solid rgba(0,0,0,.12);
+    border-radius: 3px;
+    margin-bottom: 0.5rem;
+}
+
+.radio-label {
+    display: inline-flex;
+    margin: 0;
+    width: unset !important;
+}
+.radio-label > input {
+    margin-right: 15px;
+}
+
+.radio-label {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+}
+
+.radio-label input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.checkmark {
+    position: absolute;
+    top: 3px;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #fff;
+    border-radius: 50%;
+    border: 2px solid rgba(0,0,0,.12);
+}
+
+.radio-label:hover input ~ .checkmark {
+    border-color: #ee4d2d;
+}
+
+.radio-label input:checked ~ .checkmark {
+    background-color: transparent;
+    border-color: #ee4d2d;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.radio-label input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.radio-label .checkmark:after {
+    top: 5px;
+    left: 5px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ee4d2d;
+}
+
+.my-select {
+    width: 120px;
+    height: 35px;
+    border: 1px solid rgba(0,0,0,.12);
+    border-radius: 3px;
+}
+
+#month {
+    margin: 0 15px;
+}
+
+#form{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.left-form {
+    width: calc(100% - 250px);
+}
+
+.right-form {
+    width: 250px;
+    padding-left: 20px;
+}
+
+.right-form .thumb {
+    text-align: center;
+}
+
+.right-form .thumb > img {
+    display: block;
+    object-fit: cover;
+    margin: auto;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,0,0,.12);
+}
+
+.imgSelect {
+    margin-top: 20px !important;
+    margin-bottom: 20px !important;
+    display: block;
+    margin: auto;
+    width: 100px;
+    height: 35px;
+    text-align: center;
+    border: 1px solid rgba(0,0,0,.12);
+    border-radius: 3px;
+    background-color: transparent;
+}
+
+.imgSelect:focus {
+    outline: none;
+}
+
+.right-form > .info {
+    margin: 0;
+    text-align: center;
+}
+
+.form-submit {
+    display: block;
+    margin-left: 170px;
+    width: 100%;
+}
+
+.submit {
+    height: 35px;
+    border: 0;
+    background-color: #ee4d2d;
+    color: #fff;
+    border-radius: 3px;
+    padding: 0 15px;
+}
+
+.submit:focus {
+    outline: none;
 }

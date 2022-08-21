@@ -46,15 +46,37 @@
 		<?php addHeader(); ?>
 
 		<div class="infoUser"> </div>
-		<div class="menutab">
-			<span id="tatca" class="active">Tất cả</span>
-			<span id="choxacnhan">Chờ xác nhận</span>
-			<span id="danggiao">Đang giao</span>
-			<span id="dagiao">Đã giao</span>
-			<span id="dahuy">Đã huỷ</span>
-		</div>
-		<div class="listDonHang">
-			<div class="my-bill"></div>
+		<div class="main">
+			<div class="menu">
+				<div id="avatar"></div>
+				<div class="item">
+					<i class="fa fa-user"></i>Tài khoản của tôi
+					<p id="hoso" class="link">Hồ sơ</p>
+					<p class="link">Đổi mật khẩu</p>
+				</div>
+				<div id="donmua" class="item bill">
+					<i class="fa fa-list"></i>Đơn mua
+				</div>
+			</div>
+			<div class="content">
+				<div id="profile" class="profile">
+					<h3>Hồ sơ của tôi</h3>
+					<p class="info">Quản lý thông tin hồ sơ để bảo mật tài khoản</p>
+					<form id="form" class="form"></form>
+				</div>
+				<div id="invoice" class="invoice">
+					<div class="menutab">
+						<span id="tatca" class="active">Tất cả</span>
+						<span id="choxacnhan">Chờ xác nhận</span>
+						<span id="danggiao">Đang giao</span>
+						<span id="dagiao">Đã giao</span>
+						<span id="dahuy">Đã huỷ</span>
+					</div>
+					<div class="listDonHang">
+						<div class="my-bill"></div>
+					</div>
+				</div>
+			</div>
 		</div>
 
 		<div class="modal fade" id="exampleModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

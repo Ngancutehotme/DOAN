@@ -2,6 +2,7 @@ var currentUser;
 var tongTienTatCaDonHang = 0; // lưu tổng tiền từ tất cả các đơn hàng đã mua
 var tongSanPhamTatCaDonHang = 0;
 let DSDH = []
+let dataUser = {}
 
 window.onload = function () {
     khoiTao();
@@ -12,7 +13,70 @@ window.onload = function () {
     for (var t of tags) addTags(t, "index.php?search=" + t);
 
     getCurrentUser((data) => {
+        setAvatar(data)
+        dataUser = data
         console.log(data);
+        const date = getDate()
+        const month = getMonth()
+        const year = getYear()
+        document.getElementById('form').innerHTML = `
+        <div class="left-form">
+            <div class="field">
+                <label>Tên đăng nhập</label>
+                ${data.TaiKhoan}
+            </div>
+            <div class="field">
+                <label>Tên</label>
+                <input type="text" value="${data.Ten}"></input>
+            </div>
+            <div class="field">
+                <label>Email</label>
+                ${data.Email}
+            </div>
+            <div class="field">
+                <label>Giới tính</label>
+                <label class="radio-label">
+                    <input type="radio" name="radio">
+                    <span class="checkmark"></span>
+                    Nam
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="radio">
+                    <span class="checkmark"></span>
+                    Nữ
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="radio">
+                    <span class="checkmark"></span>
+                    Khác
+                </label>
+            </div>
+            <div class="field">
+                <label>Ngày sinh</label>
+                <select name="birthday" id="birthday" class="my-select">
+                    ${date}
+                </select>
+                <select name="birthday" id="month" class="my-select">
+                    ${month}
+                </select>
+                <select name="birthday" id="year" class="my-select">
+                    ${year}
+                </select>
+            </div>
+        </div>
+        <div class="right-form">
+            <div class="thumb">
+                <img id="my-avatar" src="img/avata.jpg" class="image">
+            </div>
+            <button type="button" class="imgSelect" onClick="selectImage()">Chọn ảnh</button>
+            <input id="upfile" type="file" accept="image/png, image/jpeg" hidden onchange="ValidateAvata(this);" />
+            <p class="info">Dung lượng tối đa 1MB</p>
+            <p class="info">Định dạng JPEG, PNG</p>
+        </div>
+        <div class="form-submit">
+            <button type="button" class="submit" onClick="onSubmit()">Lưu</button>
+        </div>
+        `
         if(data) {
             $.ajax({
                 type: "POST",
@@ -402,6 +466,20 @@ function addEventChangeTab() {
             })
         }
     }
+
+    var hoso = document.getElementById('hoso');
+    var donmua = document.getElementById('donmua');
+
+    document.getElementById('invoice').style.display= 'none'
+    hoso.addEventListener('click', function() {
+        document.getElementById('profile').style.display= 'block'
+        document.getElementById('invoice').style.display= 'none'
+    })
+
+    donmua.addEventListener('click', function() {
+        document.getElementById('profile').style.display= 'none'
+        document.getElementById('invoice').style.display= 'block'
+    })
 }
 
 function turnOff_Active() {
@@ -424,4 +502,96 @@ function formatStatuses($status) {
             return 'ĐÃ HUỶ';
     }
     return 'Status error';
+}
+
+function setAvatar(data) {
+    const avata = data.avata || 'img/avata.jpg'
+    document.getElementById('avatar').innerHTML = `
+    <img src="${avata}"></img>
+    <span>${data.TaiKhoan}</span>
+    `
+}
+
+function getDate() {
+    let date= ''
+    for (let index = 1; index <= 31; index++) {
+        date += `<option value="${index}">${index}</option>`
+        
+    }
+    return date
+}
+
+function getMonth() {
+    let month= ''
+    for (let index = 1; index <= 12; index++) {
+        month += `<option value="${index}">Tháng ${index}</option>`
+        
+    }
+    return month
+}
+
+function getYear() {
+    let year = ''
+    const currentYear = new Date().getFullYear()
+    for (let index = 1900; index <= currentYear; index++) {
+        year += `<option value="${index}">${index}</option>`
+        
+    }
+    return year
+}
+
+function selectImage() {
+    document.getElementById("upfile").click();
+}
+
+function ValidateAvata(oInput) {
+    const fileSize = oInput.files[0].size / 1024 / 1024;
+    const preview = document.getElementById('avatar');
+
+
+    if (fileSize > 1) {
+        alert("Ảnh không đúng dung lượng!");
+        oInput.value = "";
+        preview.src = "img/avata.jpg";
+        return false;
+    }
+    const fileType = [".jpg", ".jpeg", ".png"];
+    if (oInput.type == "file") {
+        const fileName = oInput.value;
+        let isValid = false;
+         if (fileName.length > 0) {
+            for (let j = 0; j < fileType.length; j++) {
+                const sCurExtension = fileType[j];
+                if (fileName.substr(fileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                    isValid = true;
+                    break;
+                }
+            }
+        }
+
+        if (!isValid) {
+            alert("File không đúng định dạng!");
+            oInput.value = "";
+            preview.src = "img/avata.jpg";
+            return false;
+        } else {
+            const preview = document.getElementById('my-avatar');
+            const file    = document.getElementById('upfile').files[0];
+            const reader  = new FileReader();
+            reader.onloadend = function () {
+                preview.src = reader.result;
+            }
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = "";
+            }
+        }
+    }
+    console.log(document.getElementById('upfile').files[0]);
+    return true;
+}
+
+function onSubmit () {
+    console.log(dataUser);
 }
