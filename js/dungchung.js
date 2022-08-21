@@ -88,8 +88,11 @@ function themVaoGioHang(masp, tensp) {
             return;
 
         } else {
-            addToGioHang(masp);
-            animateCartNumber();
+            const ids = masp.split(',');
+            ids.forEach(id => {
+                addToGioHang(id);
+                animateCartNumber();
+            })
             Swal.fire({
                 toast: true,
                 position: 'bottom-end',
