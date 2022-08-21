@@ -345,27 +345,35 @@ function locdonhang(status) {
         return
     }
     currentData.forEach((item, index) => {
+        let chitietdonhang = '';
+        let listMaSP = [];
+        let listTenSP = [];
+        item.CTHD.forEach((ctdh) => {
+            listMaSP = [...listMaSP, ctdh.MaSP]
+            listTenSP = [...listTenSP, ctdh.TenSP]
+            chitietdonhang +=`<img src="${ctdh.HinhAnh}" class="image">
+            <div class="info">
+                <p>Tên sản phẩm: ${ctdh.TenSP}</p>
+                <p>Số lượng: ${ctdh.SoLuong}</p>
+                <p class="price">${parseInt(ctdh.DonGia).toLocaleString()} VND </p>
+            </div>`
+        })
         const classFirst = index === 0 ? '-first' : '';
 		const trangThaiDonHang = formatStatuses(item.TrangThai);
         donhang +=`<div class="item ${classFirst}">
 					<div class="head">
-						<span class="id">Mã đơn hàng: ${item.MaDH}</span>
+						<span class="id">Mã đơn hàng: ${item.MaHD}</span>
 						<span class="time">Thời gian: ${item.NgayLap}</span>
 						<span class="status">${trangThaiDonHang}</span>
 					</div>
 					<div class="content">
-						<img src="${item.HinhAnh}" class="image">
-						<div class="info">
-							<p>Tên sản phẩm: ${item.TenSP}</p>
-							<p>Số lượng: ${item.SoLuong}</p>
-							<p class="price">${parseInt(item.DonGia).toLocaleString()} VND </p>
-						</div>
+                    ${chitietdonhang}
 					</div>
 				</div>
 				<div class="contact">
 				<div class="total">Tổng tiền: ${parseInt(item.TongTien).toLocaleString()} VND</div>
 				<div class="action">
-					<button class="buy">Mua lại</button>
+					<button class="buy" onclick="return themVaoGioHang('${listMaSP}', '${listTenSP}')">Mua lại</button>
 					<button>Liên hệ người bán</button>
 				</div>
 			</div>
