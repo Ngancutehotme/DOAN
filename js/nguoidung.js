@@ -2,8 +2,15 @@ var currentUser;
 var tongTienTatCaDonHang = 0; // lưu tổng tiền từ tất cả các đơn hàng đã mua
 var tongSanPhamTatCaDonHang = 0;
 let DSDH = []
+let dataUser = {}
 
 window.onload = function () {
+    var url = new URL(window.location.href);
+    if (url.search.includes('donmua')) {
+        active('donmua')
+    } else {
+        active('hoso')
+    }
     khoiTao();
     addEventChangeTab();
 
@@ -12,7 +19,87 @@ window.onload = function () {
     for (var t of tags) addTags(t, "index.php?search=" + t);
 
     getCurrentUser((data) => {
+        setAvatar(data)
+        dataUser = data
         console.log(data);
+        const date = getDate()
+        const month = getMonth()
+        const year = getYear()
+        document.getElementById('form').innerHTML = `
+        <div class="left-form">
+            <div class="field">
+                <label>Tên đăng nhập</label>
+                ${data.TaiKhoan}
+            </div>
+            <div class="field">
+                <label>Tên</label>
+                <input type="text" value="${data.Ten}"></input>
+            </div>
+            <div class="field">
+                <label>Email</label>
+                ${data.Email}
+            </div>
+            <div class="field">
+                <label>Giới tính</label>
+                <label class="radio-label">
+                    <input type="radio" name="radio">
+                    <span class="checkmark"></span>
+                    Nam
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="radio">
+                    <span class="checkmark"></span>
+                    Nữ
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="radio">
+                    <span class="checkmark"></span>
+                    Khác
+                </label>
+            </div>
+            <div class="field">
+                <label>Ngày sinh</label>
+                <select name="birthday" id="birthday" class="my-select">
+                    ${date}
+                </select>
+                <select name="birthday" id="month" class="my-select">
+                    ${month}
+                </select>
+                <select name="birthday" id="year" class="my-select">
+                    ${year}
+                </select>
+            </div>
+        </div>
+        <div class="right-form">
+            <div class="thumb">
+                <img id="my-avatar" src="img/avata.jpg" class="image">
+            </div>
+            <button type="button" class="imgSelect" onClick="selectImage()">Chọn ảnh</button>
+            <input id="upfile" type="file" accept="image/png, image/jpeg" hidden onchange="ValidateAvata(this);" />
+            <p class="info">Dung lượng tối đa 1MB</p>
+            <p class="info">Định dạng JPEG, PNG</p>
+        </div>
+        <div class="form-submit">
+            <button type="button" class="submit" onClick="onSubmit()">Lưu</button>
+        </div>
+        `
+
+        document.getElementById('changePassword').innerHTML = `
+        <div class="form">
+            <div class="field">
+                <label>Mật khẩu mới</label>
+                <input type="text" value=""></input>
+            </div>
+            <div class="field">
+                <label>Xác nhận mật khẩu</label>
+                <input type="text" value=""></input>
+            </div>
+        </div>
+        <div class="form-submit">
+            <button type="button" class="submit">Lưu</button>
+        </div>
+        `
+
         if(data) {
             $.ajax({
                 type: "POST",
@@ -341,13 +428,18 @@ function locdonhang(status) {
     }
     let donhang = '';
     if (!currentData.length) {
-        $(".my-bill").html('');
+        $(".my-bill").html(`
+        <h2 style="color:green; text-align:center;">
+        Hiện chưa có đơn hàng nào, 
+        <a href="index.php" style="color:blue">Mua ngay</a>
+         </h2>`)
         return
     }
     currentData.forEach((item, index) => {
         let chitietdonhang = '';
         let listMaSP = [];
         let listTenSP = [];
+        const hide = (item.TrangThai == 0 || item.TrangThai == 1) ? "hide" : ""
         item.CTHD.forEach((ctdh) => {
             listMaSP = [...listMaSP, ctdh.MaSP]
             listTenSP = [...listTenSP, ctdh.TenSP]
@@ -373,7 +465,7 @@ function locdonhang(status) {
 				<div class="contact">
 				<div class="total">Tổng tiền: ${parseInt(item.TongTien).toLocaleString()} VND</div>
 				<div class="action">
-					<button class="buy" onclick="return themVaoGioHang('${listMaSP}', '${listTenSP}')">Mua lại</button>
+					<button class="buy ${hide}" onclick="return themVaoGioHang('${listMaSP}', '${listTenSP}')">Mua lại</button>
 					<button>Liên hệ người bán</button>
 				</div>
 			</div>
@@ -402,6 +494,54 @@ function addEventChangeTab() {
             })
         }
     }
+
+    var hoso = document.getElementById('hoso');
+    var donmua = document.getElementById('donmua');
+    var account = document.getElementById('account');
+    var matkhau = document.getElementById('matkhau');
+    
+
+    hoso.addEventListener('click', function() {
+        active('hoso')
+    })
+
+    donmua.addEventListener('click', function() {
+        active('donmua')
+    })
+
+    account.addEventListener('click', function() {
+        active('hoso')
+    })
+
+    matkhau.addEventListener('click', function() {
+        active('matkhau')
+    })
+}
+
+function active (key) {
+    const active = key.split(`'`).join('')
+    const menu = ['hoso', 'donmua', 'matkhau']
+    const content = {
+        0: 'profile',
+        1: 'invoice',
+        2: 'password'
+    }
+
+    for (let index = 0; index < menu.length; index++) {
+        const item = menu[index];
+        if (item === active) {
+            document.getElementById(item).style.color = '#ee4d2d'
+            document.getElementById(content[index]).style.display = 'block'
+        } else {
+            document.getElementById(content[index]).style.display = 'none'
+            document.getElementById(item).style.color = '#212529'
+        }
+    }
+
+    const type = key === 'donmua' ? 'none' : 'block'
+
+    document.getElementById('hoso').style.display = type
+    document.getElementById('matkhau').style.display = type
 }
 
 function turnOff_Active() {
@@ -424,4 +564,109 @@ function formatStatuses($status) {
             return 'ĐÃ HUỶ';
     }
     return 'Status error';
+}
+
+function setAvatar(data) {
+    const avata = data.avata || 'img/avata.jpg'
+    document.getElementById('avatar').innerHTML = `
+    <img src="${avata}"></img>
+    <span>${data.TaiKhoan}</span>
+    `
+}
+
+function getDate() {
+    let date= ''
+    for (let index = 1; index <= 31; index++) {
+        date += `<option value="${index}">${index}</option>`
+        
+    }
+    return date
+}
+
+function getMonth() {
+    let month= ''
+    for (let index = 1; index <= 12; index++) {
+        month += `<option value="${index}">Tháng ${index}</option>`
+        
+    }
+    return month
+}
+
+function getYear() {
+    let year = ''
+    const currentYear = new Date().getFullYear()
+    for (let index = 1900; index <= currentYear; index++) {
+        year += `<option value="${index}">${index}</option>`
+        
+    }
+    return year
+}
+
+function selectImage() {
+    document.getElementById("upfile").click();
+}
+
+function ValidateAvata(oInput) {
+    const fileSize = oInput.files[0].size / 1024 / 1024;
+    const preview = document.getElementById('avatar');
+
+
+    if (fileSize > 1) {
+        alert("Ảnh không đúng dung lượng!");
+        oInput.value = "";
+        preview.src = "img/avata.jpg";
+        return false;
+    }
+    const fileType = [".jpg", ".jpeg", ".png"];
+    if (oInput.type == "file") {
+        const fileName = oInput.value;
+        let isValid = false;
+         if (fileName.length > 0) {
+            for (let j = 0; j < fileType.length; j++) {
+                const sCurExtension = fileType[j];
+                if (fileName.substr(fileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                    isValid = true;
+                    break;
+                }
+            }
+        }
+
+        if (!isValid) {
+            alert("File không đúng định dạng!");
+            oInput.value = "";
+            preview.src = "img/avata.jpg";
+            return false;
+        } else {
+            const preview = document.getElementById('my-avatar');
+            const file    = document.getElementById('upfile').files[0];
+            const reader  = new FileReader();
+            reader.onloadend = function () {
+                preview.src = reader.result;
+            }
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = "";
+            }
+        }
+    }
+    console.log(document.getElementById('upfile').files[0]);
+    return true;
+}
+
+function onSubmit () {
+    console.log(dataUser);
+}
+
+function khoiTao() {
+    getCurrentUser((data) => {
+        if(!data) {
+            document.getElementById("btnTaiKhoan").innerHTML = '<i class="fa fa-user"></i> Tài khoản';
+            document.getElementsByClassName("menuMember")[0].classList.add('hide');
+
+        } else {
+            document.getElementById("btnTaiKhoan").innerHTML = '<i class="fa fa-user"></i> ' + data['TaiKhoan'];
+            document.getElementsByClassName("menuMember")[0].classList.remove('hide');
+        }
+    })
 }

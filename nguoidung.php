@@ -46,15 +46,48 @@
 		<?php addHeader(); ?>
 
 		<div class="infoUser"> </div>
-		<div class="menutab">
-			<span id="tatca" class="active">Tất cả</span>
-			<span id="choxacnhan">Chờ xác nhận</span>
-			<span id="danggiao">Đang giao</span>
-			<span id="dagiao">Đã giao</span>
-			<span id="dahuy">Đã huỷ</span>
-		</div>
-		<div class="listDonHang">
-			<div class="my-bill"></div>
+		<div class="main">
+			<div class="menu">
+				<div id="avatar"></div>
+				<div class="item account">
+					<div id="account">
+						<i class="fa fa-user"></i>
+						<span>Tài khoản của tôi</span>
+					</div>
+					<p id="hoso" class="link">Hồ sơ</p>
+					<p id="matkhau" class="link">Đổi mật khẩu</p>
+				</div>
+				<div id="donmua" class="item bill">
+					<div>
+						<i class="fa fa-list"></i>
+						<span>Đơn mua</span>
+					</div>
+				</div>
+			</div>
+			<div class="content">
+				<div id="profile" class="profile">
+					<h3>Hồ sơ của tôi</h3>
+					<p class="info">Quản lý thông tin hồ sơ để bảo mật tài khoản</p>
+					<form id="form" class="form"></form>
+				</div>
+				<div id="invoice" class="invoice">
+					<div class="menutab">
+						<span id="tatca" class="active">Tất cả</span>
+						<span id="choxacnhan">Chờ xác nhận</span>
+						<span id="danggiao">Đang giao</span>
+						<span id="dagiao">Đã giao</span>
+						<span id="dahuy">Đã huỷ</span>
+					</div>
+					<div class="listDonHang">
+						<div class="my-bill"></div>
+					</div>
+				</div>
+				<div id="password" class="password">
+					<h3>Thay đổi mật khẩu</h3>
+					<p class="info">Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu cho người khác.</p>
+					<form id="changePassword" class="form"></form>
+				</div>
+			</div>
 		</div>
 
 		<div class="modal fade" id="exampleModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
