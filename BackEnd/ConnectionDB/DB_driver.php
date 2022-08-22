@@ -4,7 +4,7 @@ class DB_driver
 {
     // Biến lưu trữ kết nối
     public $__conn,
-        $localhost = "127.0.0.1:3307",
+        $localhost = "localhost",
         $user = "root",
         $pass = "",
         $DbName = "web2";
