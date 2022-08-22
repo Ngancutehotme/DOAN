@@ -49,13 +49,19 @@
 		<div class="main">
 			<div class="menu">
 				<div id="avatar"></div>
-				<div class="item">
-					<i class="fa fa-user"></i>Tài khoản của tôi
+				<div class="item account">
+					<div id="account">
+						<i class="fa fa-user"></i>
+						<span>Tài khoản của tôi</span>
+					</div>
 					<p id="hoso" class="link">Hồ sơ</p>
-					<p class="link">Đổi mật khẩu</p>
+					<p id="matkhau" class="link">Đổi mật khẩu</p>
 				</div>
 				<div id="donmua" class="item bill">
-					<i class="fa fa-list"></i>Đơn mua
+					<div>
+						<i class="fa fa-list"></i>
+						<span>Đơn mua</span>
+					</div>
 				</div>
 			</div>
 			<div class="content">
@@ -75,6 +81,11 @@
 					<div class="listDonHang">
 						<div class="my-bill"></div>
 					</div>
+				</div>
+				<div id="password" class="password">
+					<h3>Thay đổi mật khẩu</h3>
+					<p class="info">Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu cho người khác.</p>
+					<form id="changePassword" class="form"></form>
 				</div>
 			</div>
 		</div>

@@ -130,17 +130,19 @@
 .item .content {
     margin-top: 15px;
     display: flex;
+    flex-wrap: wrap;
     width: 100%;
 }
 
 .item .content .image {
     width: 80px;
     height: 80px;
+    margin-bottom: 20px;
 }
 
 .item .content .info {
     margin-left: 20px;
-    width: 100%;
+    width: calc(100% - 100px);
 }
 
 .item .content .info p {
@@ -237,7 +239,7 @@
 
 .menu .item .link {
     margin: 0;
-    margin-left: 25px;
+    margin-left: 30px;
     cursor: pointer;
 }
 
@@ -248,6 +250,10 @@
 .menu .fa {
     width: 25px;
     color: #ee4d2d;
+}
+
+.menu > .account {
+    cursor: pointer;
 }
 
 .main {
@@ -280,18 +286,20 @@
     border-bottom: 1px solid rgba(0,0,0,.12);
 }
 
-.profile .form .field {
+ .form .field {
     margin-bottom: 15px;
+    display: flex;
+    align-items: center;
 }
 
-.profile .form .field > label {
+.form .field > label {
     display: inline-flex;
     justify-content: end;
-    width: 170px;
+    min-width: 170px;
     padding-right: 20px;
 }
 
-.profile .form .field > input {
+ .form .field > input {
     padding: 3px 10px;
     height: 40px;
     border: 1px solid rgba(0,0,0,.12);
@@ -302,7 +310,7 @@
 .radio-label {
     display: inline-flex;
     margin: 0;
-    width: unset !important;
+    min-width: unset !important;
 }
 .radio-label > input {
     margin-right: 15px;
@@ -440,4 +448,13 @@
 
 .submit:focus {
     outline: none;
+}
+
+.password {
+    padding: 10px 20px 200px 10px;
+}
+
+.password > .info {
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(0,0,0,.12);
 }

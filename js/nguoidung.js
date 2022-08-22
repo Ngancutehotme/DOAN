@@ -5,6 +5,12 @@ let DSDH = []
 let dataUser = {}
 
 window.onload = function () {
+    var url = new URL(window.location.href);
+    if (url.search.includes('donmua')) {
+        active('donmua')
+    } else {
+        active('hoso')
+    }
     khoiTao();
     addEventChangeTab();
 
@@ -77,6 +83,23 @@ window.onload = function () {
             <button type="button" class="submit" onClick="onSubmit()">Lưu</button>
         </div>
         `
+
+        document.getElementById('changePassword').innerHTML = `
+        <div class="form">
+            <div class="field">
+                <label>Mật khẩu mới</label>
+                <input type="text" value=""></input>
+            </div>
+            <div class="field">
+                <label>Xác nhận mật khẩu</label>
+                <input type="text" value=""></input>
+            </div>
+        </div>
+        <div class="form-submit">
+            <button type="button" class="submit">Lưu</button>
+        </div>
+        `
+
         if(data) {
             $.ajax({
                 type: "POST",
@@ -405,7 +428,11 @@ function locdonhang(status) {
     }
     let donhang = '';
     if (!currentData.length) {
-        $(".my-bill").html('');
+        $(".my-bill").html(`
+        <h2 style="color:green; text-align:center;">
+        Hiện chưa có đơn hàng nào, 
+        <a href="index.php" style="color:blue">Mua ngay</a>
+         </h2>`)
         return
     }
     currentData.forEach((item, index) => {
@@ -469,17 +496,51 @@ function addEventChangeTab() {
 
     var hoso = document.getElementById('hoso');
     var donmua = document.getElementById('donmua');
+    var account = document.getElementById('account');
+    var matkhau = document.getElementById('matkhau');
+    
 
-    document.getElementById('invoice').style.display= 'none'
     hoso.addEventListener('click', function() {
-        document.getElementById('profile').style.display= 'block'
-        document.getElementById('invoice').style.display= 'none'
+        active('hoso')
     })
 
     donmua.addEventListener('click', function() {
-        document.getElementById('profile').style.display= 'none'
-        document.getElementById('invoice').style.display= 'block'
+        active('donmua')
     })
+
+    account.addEventListener('click', function() {
+        active('hoso')
+    })
+
+    matkhau.addEventListener('click', function() {
+        active('matkhau')
+    })
+}
+
+function active (key) {
+    const active = key.split(`'`).join('')
+    const menu = ['hoso', 'donmua', 'matkhau']
+    const content = {
+        0: 'profile',
+        1: 'invoice',
+        2: 'password'
+    }
+
+    for (let index = 0; index < menu.length; index++) {
+        const item = menu[index];
+        if (item === active) {
+            document.getElementById(item).style.color = '#ee4d2d'
+            document.getElementById(content[index]).style.display = 'block'
+        } else {
+            document.getElementById(content[index]).style.display = 'none'
+            document.getElementById(item).style.color = '#212529'
+        }
+    }
+
+    const type = key === 'donmua' ? 'none' : 'block'
+
+    document.getElementById('hoso').style.display = type
+    document.getElementById('matkhau').style.display = type
 }
 
 function turnOff_Active() {
@@ -595,3 +656,5 @@ function ValidateAvata(oInput) {
 function onSubmit () {
     console.log(dataUser);
 }
+
+function khoiTao() {}
