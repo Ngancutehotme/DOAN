@@ -439,6 +439,7 @@ function locdonhang(status) {
         let chitietdonhang = '';
         let listMaSP = [];
         let listTenSP = [];
+        const hide = (item.TrangThai == 0 || item.TrangThai == 1) ? "hide" : ""
         item.CTHD.forEach((ctdh) => {
             listMaSP = [...listMaSP, ctdh.MaSP]
             listTenSP = [...listTenSP, ctdh.TenSP]
@@ -464,7 +465,7 @@ function locdonhang(status) {
 				<div class="contact">
 				<div class="total">Tổng tiền: ${parseInt(item.TongTien).toLocaleString()} VND</div>
 				<div class="action">
-					<button class="buy" onclick="return themVaoGioHang('${listMaSP}', '${listTenSP}')">Mua lại</button>
+					<button class="buy ${hide}" onclick="return themVaoGioHang('${listMaSP}', '${listTenSP}')">Mua lại</button>
 					<button>Liên hệ người bán</button>
 				</div>
 			</div>

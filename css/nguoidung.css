@@ -194,6 +194,10 @@
     border-color: #ee4d2d;
 }
 
+.contact .action .hide {
+    display: none;
+}
+
 .contact .action > button:focus {
     outline: none;
 }
