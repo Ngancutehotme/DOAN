@@ -658,4 +658,15 @@ function onSubmit () {
     console.log(dataUser);
 }
 
-function khoiTao() {}
+function khoiTao() {
+    getCurrentUser((data) => {
+        if(!data) {
+            document.getElementById("btnTaiKhoan").innerHTML = '<i class="fa fa-user"></i> Tài khoản';
+            document.getElementsByClassName("menuMember")[0].classList.add('hide');
+
+        } else {
+            document.getElementById("btnTaiKhoan").innerHTML = '<i class="fa fa-user"></i> ' + data['TaiKhoan'];
+            document.getElementsByClassName("menuMember")[0].classList.remove('hide');
+        }
+    })
+}
