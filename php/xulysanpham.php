@@ -2,6 +2,7 @@
 require_once('../BackEnd/ConnectionDB/DB_classes.php');
 
 if (!isset($_POST['request']) && !isset($_GET['request'])) die(null);
+$db = new DB_driver();
 
 switch ($_POST['request']) {
     // lấy tất cả sản phẩm
@@ -90,6 +91,33 @@ switch ($_POST['request']) {
 
         $spBUS = new SanPhamBUS();
         die (json_encode($spBUS->add_new($spAddArr)));
+        break;
+
+    case 'update':
+        $data = $_POST['dataUpdate'];
+        $id = $_POST['masp'];
+        $spUpdateArr = array(
+            'MaSP' => $data['masp'],
+            'MaLSP' => $data['company'],
+            'TenSP' => $data['name'],
+            'DonGia' => $data['price'],
+            'SoLuong' => $data['amount'],
+            'HinhAnh' => $data['img'],
+            'MaKM' => $data['promo']['name'],
+            'ManHinh' => $data['detail']['screen'],
+            'HDH' => $data['detail']['os'],
+            'CamSau' => $data['detail']['camara'],
+            'CamTruoc' => $data['detail']['camaraFront'],
+            'CPU' => $data['detail']['cpu'],
+            'Ram' => $data['detail']['ram'],
+            'Rom' => $data['detail']['rom'],
+            'SDCard' => $data['detail']['microUSB'],
+            'Pin' => $data['detail']['battery'],
+            'SoSao' => $data['star'],
+            'SoDanhGia' => $data['rateCount']
+        );
+        $w = "MaSP='" . $id . "'";
+        die (json_encode($db->update('sanpham', $spUpdateArr, $w)));
         break;
 
     // xóa

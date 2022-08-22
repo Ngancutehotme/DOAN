@@ -334,7 +334,7 @@ function layThongTinSanPhamTuTable(id) {
     var rom = tr[18].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
     var microUSB = tr[19].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
     var battery = tr[20].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
-
+    
     return {
         "name": name,
         "img": img,
@@ -529,7 +529,29 @@ function xoaSanPham(trangthai, masp, tensp) {
 // Sửa
 function suaSanPham(masp) {
     var Sp = layThongTinSanPhamTuTable('khungSuaSanPham');
-    console.log(527, Sp);
+    $.ajax({
+        type: "POST",
+        url: "php/xulysanpham.php",
+        dataType: "json",
+        data: {
+            request: "update",
+            masp,
+            dataUpdate: Sp
+        },
+        success: function(data) {
+            Swal.fire({
+                type: "success",
+                title: "Cập nhật sản phẩm thành công"
+            });
+            refreshTableSanPham();
+        },
+        error: function() {
+            Swal.fire({
+                type: "error",
+                title: "Cập nhật sản phẩm thất bại"
+            });
+        }
+    });
     return false;
 }
 
@@ -606,6 +628,10 @@ function addKhungSuaSanPham(masp) {
             <tr>
                 <td>Giá tiền:</td>
                 <td><input type="text" value="` + sp.DonGia + `"></td>
+            </tr>
+            <tr>
+                <td>Số lượng:</td>
+                <td><input type="text" value="` + sp.SoLuong + `"></td>
             </tr>
             <tr>
                 <td>Số sao:</td>
