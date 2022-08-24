@@ -317,7 +317,8 @@ function layThongTinSanPhamTuTable(id) {
     var masp = tr[1].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
     var name = tr[2].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
     var company = tr[3].getElementsByTagName('td')[1].getElementsByTagName('select')[0].value;
-    var img =  document.getElementById("hinhanh").value;
+    var img =  document.getElementById('hinhanh').value;
+    var oldImg =  document.getElementById('hinhanhcu')?.value;
     var price = tr[5].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
     var amount = tr[6].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
     var star = tr[7].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
@@ -334,10 +335,11 @@ function layThongTinSanPhamTuTable(id) {
     var rom = tr[18].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
     var microUSB = tr[19].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
     var battery = tr[20].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
-
+    
     return {
         "name": name,
         "img": img,
+        "oldImg": oldImg,
         "price": price,
         "company": company,
         "amount": amount,
@@ -424,12 +426,7 @@ function themSanPham() {
             });
         }
     });
-
-    
-
-    alert('Thêm sản phẩm "' + newSp.name + '" thành công.');
-    refreshTableSanPham();
-
+    return true
 }
 function resetForm() {
     var khung = document.getElementById('khungThemSanPham');
@@ -529,8 +526,30 @@ function xoaSanPham(trangthai, masp, tensp) {
 // Sửa
 function suaSanPham(masp) {
     var Sp = layThongTinSanPhamTuTable('khungSuaSanPham');
-    console.log(527, Sp);
-    return false;
+    $.ajax({
+        type: "POST",
+        url: "php/xulysanpham.php",
+        dataType: "json",
+        data: {
+            request: "update",
+            masp,
+            dataUpdate: Sp
+        },
+        success: function(data) {
+            Swal.fire({
+                type: "success",
+                title: "Cập nhật sản phẩm thành công"
+            });
+            refreshTableSanPham();
+        },
+        error: function() {
+            Swal.fire({
+                type: "error",
+                title: "Cập nhật sản phẩm thất bại"
+            });
+        }
+    });
+    return true
 }
 
 function addKhungSuaSanPham(masp) {
@@ -572,40 +591,41 @@ function addKhungSuaSanPham(masp) {
                 </td>
             </tr>
             <?php
-                            $tenfilemoi= "";
-                                if (isset($_POST["submit"]))
-                                {
-                                    if (($_FILES["hinhanh"]["type"]=="image/jpeg") ||($_FILES["hinhanh"]["type"]=="image/png") || ($_FILES["hinhanh"]["type"]=="image/jpg") && ($_FILES["hinhanh"]["size"] < 50000) )
-                                    {
-                                        if ($_FILES["file"]["error"] > 0 || file_exists("img/products/" . basename($_FILES["hinhanh"]["name"]))) 
-                                        {
-                                            echo ("Error Code: " . $_FILES["file"]["error"] . "<br />Chỉnh sửa ảnh lại sau)");
-                                        }
-                                        else
-                                        {
-                                            /*$tmp = explode(".", $_FILES["hinhanh"]["name"]);
-                                            $duoifile = end($tmp);
-                                            $masp = $_POST['maspThem'];
-                                            $tenfilemoi = $masp . "." . $duoifile;*/
-                                            $file = $_FILES["hinhanh"]["name"];
-                                            $tenfilemoi = "img/products/" .$_FILES["hinhanh"]["name"];
-                                            move_uploaded_file( $_FILES["hinhanh"]["tmp_name"], $tenfilemoi);
-                                        }
-                                    }
-                                }
-                        // require_once ("php/uploadfile.php");
-                        ?>
+                $tenfilemoi= "";
+                    if (isset($_POST["submit"]))
+                    {
+                        if (($_FILES["hinhanh"]["type"]=="image/jpeg") ||($_FILES["hinhanh"]["type"]=="image/png") || ($_FILES["hinhanh"]["type"]=="image/jpg") && ($_FILES["hinhanh"]["size"] < 50000) )
+                        {
+                            if ($_FILES["file"]["error"] > 0 || file_exists("img/products/" . basename($_FILES["hinhanh"]["name"]))) 
+                            {
+                                echo ("Error Code: " . $_FILES["file"]["error"] . "<br />Chỉnh sửa ảnh lại sau)");
+                            }
+                            else
+                            {
+                                $file = $_FILES["hinhanh"]["name"];
+                                $tenfilemoi = "img/products/" .$_FILES["hinhanh"]["name"];
+                                move_uploaded_file( $_FILES["hinhanh"]["tmp_name"], $tenfilemoi);
+                            }
+                        }
+                    }
+            // require_once ("php/uploadfile.php");
+            ?>
             <tr>
-                            <td>Hình:</td>
-                            <td>
-                                <img class="hinhDaiDien" id="anhDaiDienSanPhamThem" src="">
-                                <input type="file" name="hinhanh" onchange="capNhatAnhSanPham(this.files, 'anhDaiDienSanPhamThem', '<?php echo $tenfilemoi; ?>')">
-                                <input style="display: none;" type="text" id="hinhanh" value="">
-                            </td>
-                        </tr>
+                <td>Hình:</td>
+                <td>
+                    <img class="hinhDaiDien" id="anhDaiDienSanPhamSua" src="">
+                    <input type="file" name="hinhanh" onchange="capNhatAnhSanPham(this.files, 'anhDaiDienSanPhamSua', ${sp.DonGia})">
+                    <input style="display: none;" type="text" id="hinhanh" value="">
+                    <input style="display: none;" type="text" id="hinhanhcu" value="` + sp.HinhAnh + `">
+                </td>
+            </tr>
             <tr>
                 <td>Giá tiền:</td>
                 <td><input type="text" value="` + sp.DonGia + `"></td>
+            </tr>
+            <tr>
+                <td>Số lượng:</td>
+                <td><input type="text" value="` + sp.SoLuong + `"></td>
             </tr>
             <tr>
                 <td>Số sao:</td>
@@ -688,7 +708,7 @@ function capNhatAnhSanPham(files, id, anh) {
     if (files.length) url = window.URL.createObjectURL(files[0]);
 
     document.getElementById(id).src = url;
-    document.getElementById('hinhanh').value = anh;
+    document.getElementById('hinhanh').value = `img/products/${files[0].name}`;
 }
 
 // Sắp Xếp sản phẩm
