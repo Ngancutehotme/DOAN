@@ -1,6 +1,7 @@
 var TONGTIEN = 0;
 var timer;
-
+var loai_san_pham = [];
+var khuyenMai = [];
 
 window.onload = function() {
 
@@ -39,6 +40,7 @@ function refreshTableSanPham() {
             request: "getall",
         },
         success: function(data, status, xhr) {
+            ajaxLoaiSanPham();
             list_products = data; // biến toàn cục lưu trữ mảng sản phẩm hiện có
             addTableProducts(data);
         },
@@ -118,12 +120,12 @@ function ajaxLoaiSanPham() {
         type: "POST",
         url: "php/xulyloaisanpham.php",
         dataType: "json",
-        // timeout: 1500, // sau 1.5 giây mà không phản hồi thì dừng => hiện lỗi
         data: {
             request: "getall"
         },
         success: function(data, status, xhr) {
-            showLoaiSanPham(data);
+            loai_san_pham = data
+            showLoaiSanPham()
         },
         error: function(e) {
 
@@ -131,12 +133,11 @@ function ajaxLoaiSanPham() {
     });
 }
 
-function showLoaiSanPham(data) {
+function showLoaiSanPham() {
     var s="";
-    for (var i = 0; i < data.length; i++) {
-            var p = data[i];
-                s +=`<option value="` + p.MaLSP + `">` + p.TenLSP + `</option>`;
-        }
+    loai_san_pham.forEach(item => {
+        s +=`<option value="` + item.MaLSP + `">` + item.TenLSP + `</option>`;
+    })
     document.getElementsByName("chonCompany")[0].innerHTML = s;
 }
 
@@ -145,13 +146,13 @@ function ajaxKhuyenMai() {
         type: "POST",
         url: "php/xulykhuyenmai.php",
         dataType: "json",
-        // timeout: 1500, // sau 1.5 giây mà không phản hồi thì dừng => hiện lỗi
         data: {
             request: "getall"
         },
         success: function(data, status, xhr) {
+            khuyenMai = data
             showKhuyenMai(data);
-            showGTKM(data);
+            showGTKM('Add');
         },
         error: function(e) {
 
@@ -160,43 +161,36 @@ function ajaxKhuyenMai() {
 }
 
 function showKhuyenMai(data) {
+    let khuyenmai = '';
+    data.forEach(item => {
+        khuyenmai += `<option value="`+item.MaKM+`">${item.TenKM}</option>`
+    })
     var s=`
-        <option selected="selected" value="`+data[0].MaKM+`">Không</option>
-        <option value="`+data[1].MaKM+`">Trả góp</option>
-        <option value="`+data[2].MaKM+`">Giảm giá</option>
-        <option value="`+data[3].MaKM+`">Giá rẻ online</option>
-        <option value="`+data[4].MaKM+`">Mởi ra mắt</option>`;
-    document.getElementsByName("chonKhuyenMai")[0].innerHTML = s;
+        <option selected="selected" value="0">Không</option>
+        ${khuyenmai}`;
+    document.getElementsByName("chonKhuyenMaiAdd")[0].innerHTML = s;
 
 }
 
-function showGTKM() {
-    var giaTri = document.getElementsByName("chonKhuyenMai")[0].value;
-    switch (giaTri) {
-        // lấy tất cả khuyến mãi
-        case '1':
-                document.getElementById("giatrikm").value = 0;
-            break;
-
-        case '2':
-                document.getElementById("giatrikm").value = 500000;
-            break;
-
-        case '3':
-                document.getElementById("giatrikm").value = 650000;
-            break;
-
-        case '4':
-                document.getElementById("giatrikm").value = 0;
-            break;
-
-        case '5':
-                document.getElementById("giatrikm").value = 0;
-            break;
-
-        default:
-            break;
-    }
+function showGTKM(label) {
+    const id = document.getElementsByName(`chonKhuyenMai${label}`)[0].value;
+    $.ajax({
+        type: "POST",
+        url: "php/xulykhuyenmai.php",
+        dataType: "json",
+        data: {
+            request: "getById",
+            id
+        },
+        success: function(data, status, xhr) {
+            console.log();
+            document.getElementById(`giaTriKM${label}`).value = data.GiaTriKM || 0;
+        },
+        error: function(e) {
+            document.getElementById(`giaTriKM${label}`).value = 0;
+        }
+    });
+    
 }
 
 // ======================= Các Tab =========================
@@ -559,7 +553,22 @@ function addKhungSuaSanPham(masp) {
             sp = p;
         }
     }
+    let loaiSP = ''
+    let khuyenmai = '<option value="0">Không</option>'
+    let GTKM = '<input disabled="disabled" id="giaTriKMUpdate" type="text" value="0">';
+    loai_san_pham.forEach(item => {
+        const selected = item.MaLSP === sp.MaLSP ? 'selected=selected' : ''
+        loaiSP += `<option ${selected} value="${item.MaLSP}">${item.TenLSP}</option>`
 
+    })
+    khuyenMai.forEach(item => {
+        const selected = item.MaKM === sp.MaKM ? 'selected=selected' : ''
+        if (item.MaKM === sp.MaKM) {
+            GTKM = `<input disabled="disabled" id="giaTriKMUpdate" type="text" value="${item.GiaTriKM}">`
+        }
+        khuyenmai += `<option ${selected} value="${item.MaKM}">${item.TenKM}</option>`
+
+    })
     var s = `<span class="close" onclick="this.parentElement.style.transform = 'scale(0)';">&times;</span>
     <form method="post" action="" enctype="multipart/form-data" onsubmit="return suaSanPham('` + sp.MaSP + `')">
         <table class="overlayTable table-outline table-content table-header">
@@ -577,17 +586,9 @@ function addKhungSuaSanPham(masp) {
             <tr>
                 <td>Hãng:</td>
                 <td>
-                    <select name="chonCompany" onchange="autoMaSanPham(this.value)">`
-
-                    var company = ["Apple", "Coolpad", "HTC", "Itel", "Mobell", "Vivo", "Oppo", "SamSung", "Phillips", "Nokia", "Motorola", "Motorola", "Xiaomi"];
-                    var i = 1;
-                    for (var c of company) {
-                        var masp = i++;
-                        if (sp.MaLSP == masp)
-                            s += (`<option value="` + sp.MaLSP + `" selected="selected">` + c + `</option>`);
-                        else s += (`<option value="` + masp + `">` + c + `</option>`);
-                    }
-                    s+=`</select>
+                    <select name="chonCompany" onchange="autoMaSanPham(this.value)">
+                    ${loaiSP}
+                    </select>
                 </td>
             </tr>
             <?php
@@ -638,20 +639,14 @@ function addKhungSuaSanPham(masp) {
             <tr>
                 <td>Khuyến mãi:</td>
                 <td>
-                    <select name="chonKhuyenMai" onchange="showGTKM()">`
-                            var i = 1;
-                            s += (`<option selected="selected" value="` + i++ + `">Không</option>`);
-                            s += (`<option value="` + i++ + `">Giảm giá</option>`);
-                            s += (`<option value="` + i++ + `">Giá rẻ online</option>`);
-                            s += (`<option value="` + i++ + `">Trả góp</option>`);
-                            s += (`<option value="` + i++ + `">Mới ra mắt</option>`);
-                        s+=`</script>
+                    <select name="chonKhuyenMaiUpdate" onchange="showGTKM('Update')">
+                    ${khuyenmai}
                     </select>
                 </td>
             </tr>
             <tr>
                 <td>Giá trị khuyến mãi:</td>
-                <td><input id="giatrikm" type="text" value="0"></td>
+                <td>${GTKM}</td>
             </tr>
             <tr>
                 <th colspan="2">Thông số kĩ thuật</th>
