@@ -200,7 +200,7 @@
                         <tr>
                             <td>Khuyến mãi:</td>
                             <td>
-                                <select name="chonKhuyenMai" onchange="showGTKM()">
+                                <select name="chonKhuyenMaiAdd" onchange="showGTKM('Add')">
                                     <script type="text/javascript">
                                         ajaxKhuyenMai();
                                     </script>
@@ -209,7 +209,7 @@
                         </tr>
                         <tr>
                             <td>Giá trị khuyến mãi:</td>
-                            <td><input id="giatrikm" type="text"></td>
+                            <td><input disabled="disabled" id="giaTriKMAdd" type="text"></td>
                         </tr>
                         <tr>
                             <th colspan="2">Thông số kĩ thuật</th>
