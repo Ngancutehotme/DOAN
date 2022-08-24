@@ -102,7 +102,7 @@ switch ($_POST['request']) {
             'TenSP' => $data['name'],
             'DonGia' => $data['price'],
             'SoLuong' => $data['amount'],
-            'HinhAnh' => $data['img'],
+            'HinhAnh' => $data['img'] == "" ? $data['oldImg'] : $data['img'],
             'MaKM' => $data['promo']['name'],
             'ManHinh' => $data['detail']['screen'],
             'HDH' => $data['detail']['os'],
