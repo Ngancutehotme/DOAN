@@ -336,7 +336,7 @@
                 <canvas id="myChart1"></canvas>
             </div>
 
-            <div class="canvasContainer">
+            <!-- <div class="canvasContainer">
                 <canvas id="myChart2"></canvas>
             </div>
 
@@ -346,7 +346,7 @@
 
             <div class="canvasContainer">
                 <canvas id="myChart4"></canvas>
-            </div>
+            </div> -->
 
         </div>
 
