@@ -374,7 +374,7 @@
                     <i class="fa fa-plus-square"></i>
                     Thêm khuyến mãi
                 </button>
-                <button onclick="refreshTableSanPham()">
+                <button onclick="refreshTableKhuyenMai()">
                     <i class="fa fa-refresh"></i>
                     Làm mới
                 </button>

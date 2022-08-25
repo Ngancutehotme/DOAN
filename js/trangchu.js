@@ -3,12 +3,12 @@ var ProductsPerPage = 4;
 var DanhSachSanPham = [];
 var DataCompany = [];
 var CurrentFilters = [];
+let DSKM = [];
 
 window.onload = function() {
-    khoiTao();
+    khoiTaoLocKM();
     locTheoGia();
     locTheoDanhGia();
-    locTheoKhuyenMai();
 
     // autocomplete cho khung tim kiem
     // autocomplete(document.getElementById('search-box'), list_products);
@@ -508,9 +508,27 @@ function removeAllFilters() {
     $(".choosedFilter").css("display", "none");
     $(".contain-khungSanPham").css("display", "block");
     $(".contain-products").css("display", "none");
-    document.querySelector(`input[name="price"]:checked`).checked = false;
-    document.querySelector(`input[name="star"]:checked`).checked = false;
-    document.querySelector(`input[name="promo"]:checked`).checked = false;
+
+    var price = document.getElementsByName('price');
+    for (var i = 0, length = price.length; i < length; i++) {
+        if (price[i].checked) {
+            document.querySelector(`input[name="price"]:checked`).checked = false;
+        }
+    }
+
+    var star = document.getElementsByName('star');
+    for (var i = 0, length = star.length; i < length; i++) {
+        if (star[i].checked) {
+            document.querySelector(`input[name="star"]:checked`).checked = false;
+        }
+    }
+
+    var promo = document.getElementsByName('promo');
+    for (var i = 0, length = promo.length; i < length; i++) {
+        if (promo[i].checked) {
+            document.querySelector(`input[name="promo"]:checked`).checked = false;
+        }
+    }
 }
 
 // Thêm bộ lọc đã chọn vào html
@@ -692,19 +710,9 @@ function priceToString(min, max) {
 }
 
 // Chuyển khuyến mãi vễ dạng chuỗi tiếng việt
-function promoToString(name) {
-    switch (name) {
-        case 'tragop':
-            return 'Trả góp';
-        case 'giamgia':
-            return 'Giảm giá';
-        case 'giareonline':
-            return 'Giá rẻ online';
-        case 'moiramat':
-            return 'Mới ra mắt';
-        case 'Nothing':
-            return 'Không khuyến mãi';
-    }
+function promoToString(idKM) {
+    const km = DSKM.find(item => item.MaKM == idKM)
+    return km.TenKM
 }
 
 // Chuyển số sao về dạng chuỗi tiếng việt
@@ -801,4 +809,43 @@ function locTheoKhuyenMai() {
             filtersAjax(createFilters('promo', this.value));
         });
     }
+}
+
+function khoiTaoLocKM() {
+    $.ajax({
+        type: "POST",
+        url: "php/xulykhuyenmai.php",
+        dataType: "json",
+        timeout: 1500,
+        data: {
+            request: "getall",
+        },
+        success: function(data) {
+            DSKM = data;
+            addLocKhuyenMai(data);
+        },
+        error: function(e) {
+            Swal.fire({
+                type: "error",
+                title: "Lỗi lấy thông tin khuyến mãi",
+                html: e.responseText
+            });
+        }
+    })
+}
+
+function addLocKhuyenMai(KM) {
+    let fieldKm = ''
+    console.log(KM);
+    KM.forEach(element => {
+        fieldKm += `
+            <label class="radio-label">
+                <input type="radio" value="${element.MaKM}" name="promo">
+                <span class="checkmark"></span>
+                ${element.TenKM}
+            </label>
+        `
+    });
+    document.getElementById('promotionForm').innerHTML = fieldKm;
+    locTheoKhuyenMai();
 }

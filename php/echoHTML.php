@@ -177,32 +177,7 @@ function addHome()
                 </label>
             </form>
             <div class="filter-type">Lọc theo khuyến mãi</div>
-            <form name="promotionForm">
-                <label class="radio-label">
-                    <input type="radio" value="Nothing" name="promo">
-                    <span class="checkmark"></span>
-                    Không khuyến mãi
-                </label>
-                <label class="radio-label">
-                    <input type="radio" value="giamgia" name="promo">
-                    <span class="checkmark"></span>
-                    Giảm giá
-                </label>
-                <label class="radio-label">
-                    <input type="radio" value="tragop" name="promo">
-                    <span class="checkmark"></span>
-                    Trả góp
-                </label>
-                <label class="radio-label">
-                    <input type="radio" value="moiramat" name="promo">
-                    <span class="checkmark"></span>
-                    Mới ra mắt
-                </label>
-                <label class="radio-label">
-                    <input type="radio" value="giareonline" name="promo">
-                    <span class="checkmark"></span>
-                    Giá rẻ online
-                </label>
+            <form id="promotionForm" name="promotionForm">
             </form>
         <div>
         <!-- END timNangCao -->

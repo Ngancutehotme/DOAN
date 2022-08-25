@@ -183,11 +183,8 @@ function phanTich_Filters()
 
             case 'promo':
                 // lấy id khuyến mãi
-                $loaikm = $dauBang[1];
-                $khuyenmai = (new DB_driver())->get_row("SELECT * FROM KhuyenMai WHERE LoaiKM='$loaikm'");
-                $khuyenmaiID = $khuyenmai["MaKM"];
-
-                $sql .= ($sql == $ori ? "" : " AND ") . " MaKM='$khuyenmaiID'";
+                $maKM = $dauBang[1];
+                $sql .= ($sql == $ori ? "" : " AND ") . " MaKM='$maKM'";
                 break;
 
             case 'sort':
