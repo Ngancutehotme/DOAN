@@ -165,9 +165,7 @@ function showKhuyenMai(data) {
     data.forEach(item => {
         khuyenmai += `<option value="`+item.MaKM+`">${item.TenKM}</option>`
     })
-    var s=`
-        <option selected="selected" value="0">Không</option>
-        ${khuyenmai}`;
+    var s=`${khuyenmai}`;
     document.getElementsByName("chonKhuyenMaiAdd")[0].innerHTML = s;
 
 }
@@ -329,7 +327,7 @@ function layThongTinSanPhamTuTable(id) {
     var rom = tr[18].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
     var microUSB = tr[19].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
     var battery = tr[20].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
-    
+
     return {
         "name": name,
         "img": img,
@@ -404,13 +402,20 @@ function themSanPham() {
             dataAdd: newSp
         },
         success: function(data, status, xhr) {
-            Swal.fire({
-                type: 'success',
-                title: 'Thêm thành công'
-            })
-            resetForm();
-            document.getElementById('khungThemSanPham').style.transform = 'scale(0)';
-            refreshTableSanPham();
+            if (data) {
+                Swal.fire({
+                    type: 'success',
+                    title: 'Thêm thành công'
+                })
+                resetForm();
+                document.getElementById('khungThemSanPham').style.transform = 'scale(0)';
+                refreshTableSanPham();
+            } else {
+                Swal.fire({
+                    type: "error",
+                    title: "Lỗi add"
+                });
+            }
         },
         error: function(e) {
             Swal.fire({
@@ -535,6 +540,8 @@ function suaSanPham(masp) {
                 title: "Cập nhật sản phẩm thành công"
             });
             refreshTableSanPham();
+            var modal = document.getElementById('khungSuaSanPham');
+            modal.style.transform = 'scale(0)';
         },
         error: function() {
             Swal.fire({
@@ -570,7 +577,7 @@ function addKhungSuaSanPham(masp) {
 
     })
     var s = `<span class="close" onclick="this.parentElement.style.transform = 'scale(0)';">&times;</span>
-    <form method="post" action="" enctype="multipart/form-data" onsubmit="return suaSanPham('` + sp.MaSP + `')">
+    <form method="post" action="" enctype="multipart/form-data">
         <table class="overlayTable table-outline table-content table-header">
             <tr>
                 <th colspan="2">` + sp.TenSP + `</th>
@@ -688,7 +695,7 @@ function addKhungSuaSanPham(masp) {
                 <td><input type="text" value="` + sp.Pin + `"></td>
             </tr>
             <tr>
-                <td colspan="2"  class="table-footer"> <button name="submit">SỬA</button> </td>
+                <td colspan="2"  class="table-footer"> <button name="submit" type="button" onClick="return suaSanPham('` + sp.MaSP + `')">SỬA</button> </td>
             </tr>
         </table>`
 

@@ -130,7 +130,7 @@
 
             <div id="khungThemSanPham" class="overlay">
                 <span class="close" onclick="this.parentElement.style.transform = 'scale(0)';">&times;</span>
-                <form method="post" action="" enctype="multipart/form-data" onsubmit="return themSanPham();">
+                <form method="post" action="" enctype="multipart/form-data">
                     <table class="overlayTable table-outline table-content table-header">
                         <tr>
                             <th colspan="2">Thêm Sản Phẩm</th>
@@ -251,7 +251,7 @@
                             <td><input type="text"></td>
                         </tr>
                         <tr>
-                            <td colspan="2" class="table-footer"> <button name="submit">THÊM</button> </td>
+                            <td colspan="2" class="table-footer"> <button name="submit" type="button" onClick="themSanPham()">THÊM</button> </td>
                         </tr>
                     </table>
                 </form>
