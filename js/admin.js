@@ -165,9 +165,7 @@ function showKhuyenMai(data) {
     data.forEach(item => {
         khuyenmai += `<option value="`+item.MaKM+`">${item.TenKM}</option>`
     })
-    var s=`
-        <option selected="selected" value="0">Không</option>
-        ${khuyenmai}`;
+    var s=`${khuyenmai}`;
     document.getElementsByName("chonKhuyenMaiAdd")[0].innerHTML = s;
 
 }
@@ -329,7 +327,7 @@ function layThongTinSanPhamTuTable(id) {
     var rom = tr[18].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
     var microUSB = tr[19].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
     var battery = tr[20].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
-    
+
     return {
         "name": name,
         "img": img,
@@ -404,13 +402,20 @@ function themSanPham() {
             dataAdd: newSp
         },
         success: function(data, status, xhr) {
-            Swal.fire({
-                type: 'success',
-                title: 'Thêm thành công'
-            })
-            resetForm();
-            document.getElementById('khungThemSanPham').style.transform = 'scale(0)';
-            refreshTableSanPham();
+            if (data) {
+                Swal.fire({
+                    type: 'success',
+                    title: 'Thêm thành công'
+                })
+                resetForm();
+                document.getElementById('khungThemSanPham').style.transform = 'scale(0)';
+                refreshTableSanPham();
+            } else {
+                Swal.fire({
+                    type: "error",
+                    title: "Lỗi add"
+                });
+            }
         },
         error: function(e) {
             Swal.fire({
