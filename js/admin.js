@@ -1302,7 +1302,7 @@ function refreshTableKhuyenMai() {
         dataType: "json",
         // timeout: 1500, // sau 1.5 giây mà không phản hồi thì dừng => hiện lỗi
         data: {
-            request: "getall",
+            request: "getallkm",
         },
         success: function (data, status, xhr) {
             addTableKhuyenMai(data);

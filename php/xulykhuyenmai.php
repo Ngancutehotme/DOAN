@@ -7,10 +7,16 @@ $db = new DB_driver();
 switch ($_POST['request']) {
 		// lấy tất cả khuyến mãi
 	case 'getall':
-		$sql = "SELECT * FROM `khuyenmai`";
+		$sql = "SELECT * FROM `khuyenmai` WHERE NOW() BETWEEN NgayBD AND NgayKT";
 		$dskm = $db->get_list($sql);
 		die(json_encode($dskm));
 		break;
+
+		case 'getallkm':
+			$sql = "SELECT * FROM `khuyenmai`";
+			$dskm = $db->get_list($sql);
+			die(json_encode($dskm));
+			break;
 
 		// lấy khuyến mãi theo id
 	case 'getById':
