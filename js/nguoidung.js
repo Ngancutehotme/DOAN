@@ -21,45 +21,53 @@ window.onload = function () {
     getCurrentUser((data) => {
         setAvatar(data)
         dataUser = data
-        console.log(data);
-        const date = getDate()
-        const month = getMonth()
-        const year = getYear()
-        document.getElementById('form').innerHTML = `
+        const birthday = new Date(dataUser.NgaySinh)
+        const date = getDate(birthday.getDate())
+        const month = getMonth(birthday.getMonth()+1)
+        const year = getYear(birthday.getFullYear())
+        document.getElementById('form-info-user').innerHTML = `
         <div class="left-form">
             <div class="field">
                 <label>Tên đăng nhập</label>
                 ${data.TaiKhoan}
             </div>
             <div class="field">
+                <label>Họ</label>
+                <input type="text" require name="Ho" value="${data.Ho}"></input>
+            </div>
+            <div class="field">
                 <label>Tên</label>
-                <input type="text" value="${data.Ten}"></input>
+                <input type="text" require name="Ten" value="${data.Ten}"></input>
             </div>
             <div class="field">
                 <label>Email</label>
-                ${data.Email}
+                <input type="text" name="Email" value="${data.Email}"></input>
+            </div>
+            <div class="field">
+                <label>SĐT</label>
+                <input type="number" name="SDT" value="${data.SDT}"></input>
             </div>
             <div class="field">
                 <label>Giới tính</label>
                 <label class="radio-label">
-                    <input type="radio" name="radio">
+                    <input type="radio" ${data.GioiTinh == 1 ? "checked" : "unchecked"} value="1" name="GioiTinh">
                     <span class="checkmark"></span>
                     Nam
                 </label>
                 <label class="radio-label">
-                    <input type="radio" name="radio">
+                    <input type="radio" ${data.GioiTinh == 0 ? "checked" : "unchecked"} value="0" name="GioiTinh">
                     <span class="checkmark"></span>
                     Nữ
                 </label>
                 <label class="radio-label">
-                    <input type="radio" name="radio">
+                    <input type="radio" ${data.GioiTinh == 2 ? "checked" : "unchecked"} value="2" name="GioiTinh">
                     <span class="checkmark"></span>
                     Khác
                 </label>
             </div>
             <div class="field">
                 <label>Ngày sinh</label>
-                <select name="birthday" id="birthday" class="my-select">
+                <select name="birthday" id="date" class="my-select">
                     ${date}
                 </select>
                 <select name="birthday" id="month" class="my-select">
@@ -80,27 +88,34 @@ window.onload = function () {
             <p class="info">Định dạng JPEG, PNG</p>
         </div>
         <div class="form-submit">
-            <button type="button" class="submit" onClick="onSubmit()">Lưu</button>
+            <button type="button" class="submit" name="submit" onClick="return updateInfoUser()">Lưu</button>
         </div>
         `
 
         document.getElementById('changePassword').innerHTML = `
         <div class="form">
             <div class="field">
+                <label>Mật khẩu cũ</label>
+                <input type="password" name="matKhauCu" value="">
+                <span class="fa fa-fw fa-eye field-icon toggle-password" onClick="return togglePassword('matKhauCu')"></span>
+            </div>
+            <div class="field">
                 <label>Mật khẩu mới</label>
-                <input type="text" value=""></input>
+                <input type="password" name="matKhauMoi" value="">
+                <span class="fa fa-fw fa-eye field-icon toggle-password" onClick="return togglePassword('matKhauMoi')"></span>
             </div>
             <div class="field">
                 <label>Xác nhận mật khẩu</label>
-                <input type="text" value=""></input>
+                <input type="password" name="xacNhanMatKhau" value="">
+                <span class="fa fa-fw fa-eye field-icon toggle-password" onClick="return togglePassword('xacNhanMatKhau')"></span>
             </div>
         </div>
         <div class="form-submit">
-            <button type="button" class="submit">Lưu</button>
+            <button type="button" class="submit" onClick="return updatePassword()">Lưu</button>
         </div>
         `
 
-        if(data) {
+        if (data) {
             $.ajax({
                 type: "POST",
                 url: "php/getdonhang.php",
@@ -108,11 +123,11 @@ window.onload = function () {
                 data: {
                     request: "getall",
                 },
-                success: function(data) {
+                success: function (data) {
                     DSDH = data
                     locdonhang(-1)
                 },
-                error: function(e) {
+                error: function (e) {
                     console.log(e.responseText);
                 }
             })
@@ -123,11 +138,133 @@ window.onload = function () {
             document.getElementsByClassName('infoUser')[0].innerHTML = warning;
         }
 
-    }, (e)=> {
+    }, (e) => {
         console.log(e.responseText);
     })
 }
 
+function updatePassword() {
+    const dataUpdate = getPasswordToForm();
+    if (!dataUpdate.matKhauMoi || !dataUpdate.xacNhanMatKhau || !dataUpdate.matKhauCu) {
+        alert("Chưa điền mật khẩu");
+        return false;
+    }
+
+    if (dataUpdate.matKhauMoi !== dataUpdate.xacNhanMatKhau || dataUpdate.matKhauMoi === dataUpdate.matKhauCu) {
+        alert("Mật khẩu không hợp lệ");
+        return false;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "php/updateInfoUser.php",
+        dataType: "json",
+        data: {
+            request: "updatePassword",
+            dataUpdate
+        },
+        success: function (data) {
+            if (data) {
+                Swal.fire({
+                    type: "success",
+                    title: "Cập nhật mật khẩu thành công thành công"
+                });
+            }
+            resetFormUpdatePassword()
+        },
+        error: function () {
+            Swal.fire({
+                type: "error",
+                title: "Cập nhật thất bại"
+            });
+        }
+    });
+    return
+}
+
+function resetFormUpdatePassword() {
+    document.getElementsByName('xacNhanMatKhau')[0].value = "";
+    document.getElementsByName('matKhauMoi')[0].value = "";
+    document.getElementsByName('matKhauCu')[0].value = "";
+}
+
+function togglePassword(id) {
+    const type = document.getElementsByName(id)[0].type
+    if (type == "password") {
+        document.getElementsByName(id)[0].type = 'text'
+    } else {
+        document.getElementsByName(id)[0].type = 'password'
+    }
+}
+
+function updateInfoUser() {
+    const dataUpdate = getInfoUserToForm();
+
+    if (dataUpdate.SDT.replace(/\D/g, '').length !== 10) {
+        alert("Số điện thoại không hợp lệ");
+        return false;
+    }
+
+    if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(dataUpdate.Email))) {
+        alert("Email không hợp lệ");
+        return false;
+    }
+
+    if (!dataUpdate.Ho) {
+        alert("Họ không hợp lệ");
+        return false;
+    }
+
+    if (!dataUpdate.Ten) {
+        alert("Ten không hợp lệ");
+        return false;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "php/updateInfoUser.php",
+        dataType: "json",
+        data: {
+            request: "updateUser",
+            dataUpdate
+        },
+        success: function (data) {
+            if (data) {
+                Swal.fire({
+                    type: "success",
+                    title: "Cập nhật thành công"
+                });
+            }
+        },
+        error: function () {
+            Swal.fire({
+                type: "error",
+                title: "Cập nhật thất bại"
+            });
+        }
+    });
+    return
+}
+
+function getInfoUserToForm() {
+    const Ho = document.getElementsByName('Ho')[0].value;
+    const Ten = document.getElementsByName('Ten')[0].value;
+    const Email = document.getElementsByName('Email')[0].value;
+    const SDT = document.getElementsByName('SDT')[0].value;
+    const GioiTinh = Object.values(document.getElementsByName('GioiTinh')).find(item => item.checked).value;
+    const date = document.getElementById('date').value;
+    const month = document.getElementById('month').value;
+    const year = document.getElementById('year').value;
+    const NgaySinh = `${year}-${month}-${date}`
+    return { Ho, Ten, Email, SDT, GioiTinh, NgaySinh };
+}
+
+function getPasswordToForm() {
+    const xacNhanMatKhau = document.getElementsByName('xacNhanMatKhau')[0].value;
+    const matKhauMoi = document.getElementsByName('matKhauMoi')[0].value;
+    const matKhauCu = document.getElementsByName('matKhauCu')[0].value;
+    return { xacNhanMatKhau, matKhauMoi, matKhauCu }
+}
 
 function xemChiTiet(mahd) {
     $.ajax({
@@ -136,10 +273,10 @@ function xemChiTiet(mahd) {
         data: {
             mahd: mahd
         },
-        success: function(data) {
+        success: function (data) {
             $("#chitietdonhang").html(data);
         },
-        error: function(e) {
+        error: function (e) {
             console.log(e.responseText);
         }
     });
@@ -274,7 +411,7 @@ function changePass() {
         text: 'Thay đổi mật khẩu thành công.'
     }).then((result) => {
         inps[0].value = inps[1].value = inps[2].value = "";
-        openChangePass();    
+        openChangePass();
     });
     // addAlertBox('Thay đổi mật khẩu thành công.', '#5f5', '#000', 4000);
 }
@@ -443,7 +580,7 @@ function locdonhang(status) {
         item.CTHD.forEach((ctdh) => {
             listMaSP = [...listMaSP, ctdh.MaSP]
             listTenSP = [...listTenSP, ctdh.TenSP]
-            chitietdonhang +=`<img src="${ctdh.HinhAnh}" class="image">
+            chitietdonhang += `<img src="${ctdh.HinhAnh}" class="image">
             <div class="info">
                 <p>Tên sản phẩm: ${ctdh.TenSP}</p>
                 <p>Số lượng: ${ctdh.SoLuong}</p>
@@ -451,8 +588,8 @@ function locdonhang(status) {
             </div>`
         })
         const classFirst = index === 0 ? '-first' : '';
-		const trangThaiDonHang = formatStatuses(item.TrangThai);
-        donhang +=`<div class="item ${classFirst}">
+        const trangThaiDonHang = formatStatuses(item.TrangThai);
+        donhang += `<div class="item ${classFirst}">
 					<div class="head">
 						<span class="id">Mã đơn hàng: ${item.MaHD}</span>
 						<span class="time">Thời gian: ${item.NgayLap}</span>
@@ -487,7 +624,7 @@ function addEventChangeTab() {
     var list_span = tab.getElementsByTagName('span');
     for (var span of list_span) {
         if (!span.onclick) {
-            span.addEventListener('click', function() {
+            span.addEventListener('click', function () {
                 turnOff_Active();
                 this.classList.add('active');
                 locdonhang(status[this.id])
@@ -499,26 +636,26 @@ function addEventChangeTab() {
     var donmua = document.getElementById('donmua');
     var account = document.getElementById('account');
     var matkhau = document.getElementById('matkhau');
-    
 
-    hoso.addEventListener('click', function() {
+
+    hoso.addEventListener('click', function () {
         active('hoso')
     })
 
-    donmua.addEventListener('click', function() {
+    donmua.addEventListener('click', function () {
         active('donmua')
     })
 
-    account.addEventListener('click', function() {
+    account.addEventListener('click', function () {
         active('hoso')
     })
 
-    matkhau.addEventListener('click', function() {
+    matkhau.addEventListener('click', function () {
         active('matkhau')
     })
 }
 
-function active (key) {
+function active(key) {
     const active = key.split(`'`).join('')
     const menu = ['hoso', 'donmua', 'matkhau']
     const content = {
@@ -557,7 +694,7 @@ function formatStatuses($status) {
         case '0':
             return 'CHỜ XÁC NHẬN';
         case '1':
-            return 'ĐANG GIAO'; 
+            return 'ĐANG GIAO';
         case '2':
             return 'ĐÃ GIAO';
         case '3':
@@ -574,30 +711,30 @@ function setAvatar(data) {
     `
 }
 
-function getDate() {
-    let date= ''
+function getDate(d) {
+    let date = ''
     for (let index = 1; index <= 31; index++) {
-        date += `<option value="${index}">${index}</option>`
-        
+        date += `<option ${index === d ? "selected" : ""} value="${index}">${index}</option>`
+
     }
     return date
 }
 
-function getMonth() {
-    let month= ''
+function getMonth(m) {
+    let month = ''
     for (let index = 1; index <= 12; index++) {
-        month += `<option value="${index}">Tháng ${index}</option>`
-        
+        month += `<option  ${index === m ? "selected" : ""} value="${index}">Tháng ${index}</option>`
+
     }
     return month
 }
 
-function getYear() {
+function getYear(y) {
     let year = ''
     const currentYear = new Date().getFullYear()
     for (let index = 1900; index <= currentYear; index++) {
-        year += `<option value="${index}">${index}</option>`
-        
+        year += `<option  ${index === y ? "selected" : ""} value="${index}">Năm ${index}</option>`
+
     }
     return year
 }
@@ -621,7 +758,7 @@ function ValidateAvata(oInput) {
     if (oInput.type == "file") {
         const fileName = oInput.value;
         let isValid = false;
-         if (fileName.length > 0) {
+        if (fileName.length > 0) {
             for (let j = 0; j < fileType.length; j++) {
                 const sCurExtension = fileType[j];
                 if (fileName.substr(fileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
@@ -638,8 +775,8 @@ function ValidateAvata(oInput) {
             return false;
         } else {
             const preview = document.getElementById('my-avatar');
-            const file    = document.getElementById('upfile').files[0];
-            const reader  = new FileReader();
+            const file = document.getElementById('upfile').files[0];
+            const reader = new FileReader();
             reader.onloadend = function () {
                 preview.src = reader.result;
             }
@@ -654,13 +791,13 @@ function ValidateAvata(oInput) {
     return true;
 }
 
-function onSubmit () {
+function onSubmit() {
     console.log(dataUser);
 }
 
 function khoiTao() {
     getCurrentUser((data) => {
-        if(!data) {
+        if (!data) {
             document.getElementById("btnTaiKhoan").innerHTML = '<i class="fa fa-user"></i> Tài khoản';
             document.getElementsByClassName("menuMember")[0].classList.add('hide');
 

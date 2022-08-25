@@ -18,10 +18,10 @@
 	<!-- Bootstrap -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
-	
+
 
 	<!-- Sweet Alert -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
 
 	<!-- our files -->
 	<!-- css -->
@@ -68,7 +68,7 @@
 				<div id="profile" class="profile">
 					<h3>Hồ sơ của tôi</h3>
 					<p class="info">Quản lý thông tin hồ sơ để bảo mật tài khoản</p>
-					<form id="form" class="form"></form>
+					<form method="post" action="" enctype="multipart/form-data" id="form-info-user" class="form"></form>
 				</div>
 				<div id="invoice" class="invoice">
 					<div class="menutab">
@@ -93,26 +93,26 @@
 		<div class="modal fade" id="exampleModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
-				    <div class="modal-header">
-				        <h5 class="modal-title" id="exampleModalLabel" >Chi tiết đơn hàng</h5>
-				        <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
-				          <span aria-hidden="true">&times;</span>
-				        </button>
-				    </div>
-				<div class="modal-body" id="chitietdonhang"></div>
-				<div class="modal-footer">
-		        	<button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-		        	<!-- <button type="button" class="btn btn-primary">Save changes</button> -->
-		      	</div>
-		    	</div>
-		  	</div>
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Chi tiết đơn hàng</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body" id="chitietdonhang"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+						<!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+					</div>
+				</div>
+			</div>
 		</div>
-		
+
 	</section> <!-- End Section -->
 
-	<?php 
-		addContainTaiKhoan();
-		addPlc(); 
+	<?php
+	addContainTaiKhoan();
+	addPlc();
 	?>
 
 	<div class="footer">
