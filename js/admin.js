@@ -2,6 +2,7 @@ var TONGTIEN = 0;
 var timer;
 var loai_san_pham = [];
 var khuyenMai = [];
+var danhSachKhuyenMai = [];
 
 window.onload = function() {
 
@@ -19,7 +20,7 @@ window.onload = function() {
             if(user.MaQuyen != 1) {
                 addEventChangeTab();
                 addThongKe();
-                refreshTableDonHang()
+                refreshTableDonHang();
                 openTab('Đơn Hàng');
             }
         } else {
@@ -238,6 +239,9 @@ function openTab(nameTab) {
             break;
         case 'Thống Kê':
             document.getElementsByClassName('thongke')[0].style.display = 'block';
+            break;
+        case 'Khuyến Mãi':
+            document.getElementsByClassName('khuyenmai')[0].style.display = 'block';
             break;
     }
 }
@@ -1283,4 +1287,65 @@ function updateStatusBill(id, status) {
 		}
 
 	})
+}
+
+function refreshTableKhuyenMai() {
+    $.ajax({
+        type: "POST",
+        url: "php/xulykhuyenmai.php",
+        dataType: "json",
+        // timeout: 1500, // sau 1.5 giây mà không phản hồi thì dừng => hiện lỗi
+        data: {
+            request: "getall",
+        },
+        success: function(data, status, xhr) {
+            addTableKhuyenMai(data);
+            danhSachKhuyenMai = data;
+        },
+        error: function(e) {
+            Swal.fire({
+                type: "error",
+                title: "Lỗi lấy dữ liệu khách Hàng (admin.js > refreshTableKhachHang)",
+                html: e.responseText
+            });
+        }
+    });
+}
+
+function addTableKhuyenMai(data) {
+    var tc = document.getElementsByClassName('khuyenmai')[0].getElementsByClassName('table-content')[0];
+    var s = `<table class="table-outline hideImg">`;
+
+    var loaiKM = {
+        Nothing: "Không khuyến mãi",
+        GiamGia: "Giảm giá",
+        GiaReOnline: "Giá rẻ online",
+        TraGop: "Trả góp",
+        MoiRaMat: "Mới  ra mắt"
+    }
+
+    for (var i = 0; i < data.length; i++) {
+        var u = data[i];
+        const loaiKhuyenMai = loaiKM[u.LoaiKM]
+        
+
+        s += `<tr>
+            <td style="width: 5%">` + (i + 1) + `</td>
+            <td style="width: 11%">` + u.TenKM + `</td>
+            <td style="width: 10%">` + u.MaKM + `</td>
+            <td style="width: 10%">` + loaiKhuyenMai + `</td>
+            <td style="width: 15%">` + u.GiaTriKM + `</td>
+            <td style="width: 16%">` + u.NgayBD + `</td>
+            <td style="width: 16%">` + u.NgayKT + `</td>
+            <td style="width: 10%"></td>
+        </tr>`;
+    }
+
+    s += `</table>`;
+    tc.innerHTML = s;
+}
+
+function autoMaKhuyenMai(company) {
+    var autoMaKM = danhSachKhuyenMai[danhSachKhuyenMai.length-1].MaKM;
+    document.getElementById('maKMThem').value = parseInt(autoMaKM)+1;
 }

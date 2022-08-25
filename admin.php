@@ -44,6 +44,7 @@
             <li class="nav-item" onclick="refreshTableSanPham()"><a class="nav-link"><i class="fa fa-th-large"></i> Sản Phẩm</a></li>
             <li class="nav-item" onclick="refreshTableDonHang()"><a class="nav-link don-hang"><i class="fa fa-file-text-o"></i> Đơn Hàng</a></li>
             <li class="nav-item" onclick="refreshTableKhachHang()"><a class="nav-link"><i class="fa fa-address-book-o"></i> Khách Hàng</a></li>
+            <li class="nav-item" onClick="refreshTableKhuyenMai()"><a class="nav-link"><i class="fa fa-bookmark"></i>Khuyến Mãi</a></li>
             <li class="nav-item"><a class="nav-link"><i class="fa fa-bar-chart-o"></i> Thống Kê</a></li>
             <hr>
             <li class="nav-item">
@@ -347,6 +348,85 @@
                 <canvas id="myChart4"></canvas>
             </div>
 
+        </div>
+
+        <!-- Khuyến mãi -->
+        <div class="khuyenmai">
+            <table class="table-header">
+                <tr>
+                    <!-- Theo độ rộng của table content -->
+                    <th title="Sắp xếp" style="width: 5%" onclick="sortDonHangTable('stt')">Stt <i class="fa fa-sort"></i></th>
+                    <th title="Sắp xếp" style="width: 10%" onclick="sortDonHangTable('madon')">Tên <i class="fa fa-sort"></i></th>
+                    <th title="Sắp xếp" style="width: 10%" onclick="sortDonHangTable('madon')">Mã khuyến mãi <i class="fa fa-sort"></i></th>
+                    <th title="Sắp xếp" style="width: 10%" onclick="sortDonHangTable('khach')">Loại khuyến mãi <i class="fa fa-sort"></i></th>
+                    <th title="Sắp xếp" style="width: 15%" onclick="sortDonHangTable('sanpham')">Giá trị <i class="fa fa-sort"></i></th>
+                    <th title="Sắp xếp" style="width: 15%" onclick="sortDonHangTable('tongtien')">Ngày bắt đầu <i class="fa fa-sort"></i></th>
+                    <th title="Sắp xếp" style="width: 15%" onclick="sortDonHangTable('ngaygio')">Ngày kết thúc <i class="fa fa-sort"></i></th>
+                    <th style="width: 10%">Hành động</th>
+                </tr>
+            </table>
+
+            <div class="table-content">
+            </div>
+
+            <div class="table-footer">
+                <button onclick="document.getElementById('khungThemKhuyenMai').style.transform = 'scale(1)'; autoMaKhuyenMai()">
+                    <i class="fa fa-plus-square"></i>
+                    Thêm khuyến mãi
+                </button>
+                <button onclick="refreshTableSanPham()">
+                    <i class="fa fa-refresh"></i>
+                    Làm mới
+                </button>
+            </div>
+
+            <div id="khungThemKhuyenMai" class="overlay">
+                <span class="close" onclick="this.parentElement.style.transform = 'scale(0)';">&times;</span>
+                <form method="post" action="" enctype="multipart/form-data">
+                    <table class="overlayTable table-outline table-content table-header">
+                        <tr>
+                            <th colspan="2">Thêm Khuyến Mãi</th>
+                        </tr>
+                        <tr>
+                            <td>Mã sản phẩm:</td>
+                            <td><input disabled="disabled" type="text" id="maKMThem" name="maKMThem"></td>
+                        </tr>
+                        <tr>
+                            <td>Tên khuyến mãi:</td>
+                            <td><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td>Mã khuyến mãi:</td>
+                            <td><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td>Loại khuyến mãi:</td>
+                            <td>
+                            <select id="loaiKM" name="loaiKM">
+                                <option value="Nothing">Không khuyến mãi</option>
+                                <option value="GiamGia">Giảm giá</option>
+                                <option value="GiaReOnline">Giá rẻ online</option>
+                                <option value="TraGop">Trả góp</option>
+                                <option value="MoiRaMat">Mới ra mắt</option>
+                            </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Ngày bắt đầu:</td>
+                            <td><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td>Ngày kết thúc:</td>
+                            <td><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="table-footer"> <button name="submit" type="button" onClick="themKhuyenMai()">THÊM</button> </td>
+                        </tr>
+                    </table>
+                </form>
+                <div style="display: none;" id="hinhanh"></div>
+            </div>
+            <div id="khungSuaKhuyenMai" class="overlay"></div>
         </div>
     </div> <!-- // main -->
 
