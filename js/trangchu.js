@@ -6,6 +6,9 @@ var CurrentFilters = [];
 
 window.onload = function() {
     khoiTao();
+    locTheoGia();
+    locTheoDanhGia();
+    locTheoKhuyenMai();
 
     // autocomplete cho khung tim kiem
     // autocomplete(document.getElementById('search-box'), list_products);
@@ -21,26 +24,6 @@ window.onload = function() {
     // Thêm danh sách hãng điện thoại
     setupCompany();
 
-    // slider chọn khoảng giá
-    $("#demoSlider").ionRangeSlider({
-        type: "double",
-        grid: true,
-        min: 0,
-        max: 50,
-        from: 0,
-        to: 50,
-        step: 0.5,
-        drag_interval: true,
-        postfix: " triệu",
-        prettify_enabled: true,
-        prettify_separator: ",",
-        values_separator: " →   ",
-        onFinish: function(data) {
-            filtersAjax(createFilters('price', data.from * 1E6 + "-" + data.to * 1E6));
-        },
-    });
-    // ==================== End ===========================
-
     // Thêm sản phẩm vào trang
     var filters = getFilterFromURL();
     if (filters.length) { // có filter
@@ -50,27 +33,6 @@ window.onload = function() {
         hienThiKhungSanPhamMacDinh();
     }
 
-    // Thêm chọn mức giá
-    addPricesRange(0, 2000000);
-    addPricesRange(2000000, 4000000);
-    addPricesRange(4000000, 7000000);
-    addPricesRange(7000000, 13000000);
-    addPricesRange(13000000, 0);
-
-    // Thêm chọn khuyến mãi
-    addPromotion('Nothing');
-    addPromotion('giamgia');
-    addPromotion('tragop');
-    addPromotion('moiramat');
-    addPromotion('giareonline');
-
-    // Thêm chọn số sao
-    addStarFilter(0);
-    addStarFilter(1);
-    addStarFilter(2);
-    addStarFilter(3);
-    addStarFilter(4);
-    addStarFilter(5);
 
     // Thêm chọn sắp xếp
     addSortFilter('asc', 'DonGia', 'Giá tăng dần');
@@ -519,6 +481,7 @@ function createFilters(type, value) {
 }
 
 function craeteRemoveFilters(type) {
+    document.querySelector(`input[name="${type}"]:checked`).checked = false;
     var newFilters = [];
 
     for (var f of CurrentFilters) {
@@ -545,6 +508,9 @@ function removeAllFilters() {
     $(".choosedFilter").css("display", "none");
     $(".contain-khungSanPham").css("display", "block");
     $(".contain-products").css("display", "none");
+    document.querySelector(`input[name="price"]:checked`).checked = false;
+    document.querySelector(`input[name="star"]:checked`).checked = false;
+    document.querySelector(`input[name="promo"]:checked`).checked = false;
 }
 
 // Thêm bộ lọc đã chọn vào html
@@ -558,7 +524,7 @@ function addChoosedFilter(type, textInside) {
 // Thêm nhiều bộ lọc cùng lúc 
 function addAllChoosedFilter(filters) {
     // xóa tất cả bộ lọc cũ
-    $(".choosedFilter").html(`<a onclick="removeAllFilters()"><h3>Xóa bộ lọc <i class="fa fa-close"></i></h3></a>`);
+    $(".choosedFilter").html(`<a onclick="removeAllFilters()" class="remove-all"><h3>Xóa bộ lọc <i class="fa fa-close"></i></h3></a>`);
     $(".choosedFilter").css("display", "");
 
     // Lưu bộ lọc mới
@@ -704,32 +670,6 @@ function addCompany(img, nameCompany) {
     khung_hangSanXuat.innerHTML += new_tag;
 }
 
-// Thêm chọn mức giá
-function addPricesRange(min, max) {
-    var text = priceToString(min, max);
-    var a = `<a onclick="filtersAjax(createFilters('price', '` + (min + "-" + max) + `'))">` + text + `</a>`
-
-    document.getElementsByClassName('pricesRangeFilter')[0]
-        .getElementsByClassName('dropdown-content')[0].innerHTML += a;
-}
-
-// Thêm chọn khuyến mãi
-function addPromotion(name) {
-    var text = promoToString(name);
-    var promo = `<a onclick="filtersAjax(createFilters('promo', '` + name + `'))">` + text + `</a>`;
-
-    document.getElementsByClassName('promosFilter')[0]
-        .getElementsByClassName('dropdown-content')[0].innerHTML += promo;
-}
-
-// Thêm chọn số lượng sao
-function addStarFilter(value) {
-    var text = starToString(value);
-    var star = `<a onclick="filtersAjax(createFilters('star', '` + value + `'))">` + text + `</a>`;
-
-    document.getElementsByClassName('starFilter')[0]
-        .getElementsByClassName('dropdown-content')[0].innerHTML += star;
-}
 
 // Thêm chọn sắp xếp theo giá
 function addSortFilter(type, nameFilter, text) {
@@ -814,5 +754,51 @@ function setCompanysMenu() {
         content.style.maxHeight = content.scrollHeight + "px";
         document.getElementById("iconOpenMenu").style.display = "none";
         document.getElementById("iconCloseMenu").style.display = "block";
+    }
+}
+
+function locTheoGia() {
+    var price = document.priceForm.price;
+    var prev = null;
+    var priceList = {
+        1: '0-2000000',
+        2: '2000000-6000000',
+        3: '6000000-10000000',
+        4: '10000000-20000000',
+        5: '20000000-5000000',
+    }
+    for (var i = 0; i < price.length; i++) {
+        price[i].addEventListener('change', function() {
+            if (this !== prev) {
+                prev = this;
+            }
+            filtersAjax(createFilters('price', priceList[this.value]));
+        });
+    }
+}
+
+function locTheoDanhGia() {
+    var price = document.starForm.star;
+    var prev = null;
+    for (var i = 0; i < price.length; i++) {
+        price[i].addEventListener('change', function() {
+            if (this !== prev) {
+                prev = this;
+            }
+            filtersAjax(createFilters('star', this.value));
+        });
+    }
+}
+
+function locTheoKhuyenMai() {
+    var price = document.promotionForm.promo;
+    var prev = null;
+    for (var i = 0; i < price.length; i++) {
+        price[i].addEventListener('change', function() {
+            if (this !== prev) {
+                prev = this;
+            }
+            filtersAjax(createFilters('promo', this.value));
+        });
     }
 }

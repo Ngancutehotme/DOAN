@@ -57,7 +57,7 @@
 	    position: absolute;
 	    min-width: 170px;
 	    border-radius: 5px;
-	    background-color: rgba(255, 255, 255, .8);
+	    background-color: #fff;
 		box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
 		/* mặc địng là xoay 90 độ => bị ẩn đi */
 	    transform: rotateX(90deg);
@@ -71,7 +71,7 @@
 	}
 	.dropdown-content a:hover { 
 		color: white;
-		background-color: #555 
+		background-color: #ff9c00 
 	}
 	.dropdown:hover .dropdown-content {
 	    /* khi hover vào thì cần hiện content ra => xoay 0 độ => trờ về như cũ */
@@ -88,6 +88,7 @@
 	background-color: #333;
 	font-weight: bold;
 	font-size: 1em;
+	margin-top: 0;
 }
 
 #divSoLuongSanPham span {
@@ -98,6 +99,7 @@
 /* Filter by Name */
 .filterName {
 	margin: 15px auto;
+	margin-top: 0;
 	text-align: center;
 	/* width: 195px; */
 }
@@ -117,28 +119,41 @@
 } 
 
 /* Choosed filter */
-.choosedFilter { margin: 10px auto; }
 .choosedFilter i { transition-duration: .3s; }
-.choosedFilter a:hover > h3 > i { color: red; }
+.choosedFilter a:hover {
+	scale: 1.05;
+}
 /* .choosedFilter a:hover > h3 { text-decoration: line-through; } */
 .choosedFilter a {
     font-size: 12px;
     padding: 6px;
     color: #fff;
-    background: #288ad6;
-    border-radius: 4px;
-    margin-right: 5px;
+    border-radius: 3px;
     cursor: pointer;
+	margin-bottom: 10px;
+	text-align: center;
+	background-image: linear-gradient(120deg, #ff9c00 0%, #ec1f1f 50%, #ff9c00 100%);
+	width: 100%;
+	transition: all 0.3s ease;
+}
+
+.contain-products {
+	padding-left: 20px;
 }
 
 /* Các khung sản phẩm */
 .contain-khungSanPham {
-	
+	width: calc(100% - 200px);
+	padding-left: 20px;
+}
+
+.wrapper {
+	display: flex;
 }
 
 .khungSanPham {
 	width: 100%;
-	margin: 50px 0;
+	margin: 18px 0;
 	border-radius: 5px;
 	border: 2px solid #ff4d00; 
 	box-sizing: border-box; /* dùng để width ko vượt ra ngoài khi có border */
@@ -217,4 +232,90 @@
 		float: right;
 		text-align: left;
 	}
+}
+
+.filter-type {
+	padding: 5px;
+	background-image: linear-gradient(120deg, #ff9c00 0%, #ec1f1f 50%, #ff9c00 100%);
+	color: #fff;
+	margin-bottom: 15px;
+	border-radius: 3px;
+}
+
+/* radio style */
+.radio-label > input {
+    margin-right: 15px;
+}
+
+.radio-label {
+	height: 35px;
+    display: flex;
+	align-items: center;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+	margin: 0;
+    min-width: unset !important;
+}
+
+.radio-label input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.checkmark {
+    position: absolute;
+    top: 5px;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #fff;
+    border-radius: 50%;
+    border: 2px solid rgba(0,0,0,.12);
+}
+
+.radio-label:hover input ~ .checkmark {
+    border-color: #ee4d2d;
+}
+
+.radio-label:hover {
+    color: #ee4d2d;
+}
+
+.radio-label input:checked ~ .checkmark {
+    background-color: transparent;
+    border-color: #ee4d2d;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.radio-label input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.radio-label .checkmark:after {
+    top: 5px;
+    left: 5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ee4d2d;
+}
+
+.sortFilter {
+	width: 100%;
+	margin: 0;
+}
+
+.btnsort {
+	margin-bottom: 10px;
+	border-radius: 3px;
+	width: 100%;
+	background-image: linear-gradient(120deg, #ff9c00 0%, #ec1f1f 50%, #ff9c00 100%);
 }
