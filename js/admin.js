@@ -572,7 +572,7 @@ function addKhungSuaSanPham(masp) {
         }
     }
     let loaiSP = ''
-    let khuyenmai = '<option value="0">Không</option>'
+    let khuyenmai = ''
     let GTKM = '<input disabled="disabled" id="giaTriKMUpdate" type="text" value="0">';
     loai_san_pham.forEach(item => {
         const selected = item.MaLSP === sp.MaLSP ? 'selected=selected' : ''
@@ -1332,7 +1332,16 @@ function addTableKhuyenMai(data) {
             <td style="width: 15%">` + u.GiaTriKM + `</td>
             <td style="width: 16%">` + u.NgayBD + `</td>
             <td style="width: 16%">` + u.NgayKT + `</td>
-            <td style="width: 10%"></td>
+            <td style="width: 10%">
+            <div class="tooltip">
+                <i class="fa fa-wrench" onclick="addKhungSuaKhuyenMai('` + u.MaKM + `')"></i>
+                <span class="tooltiptext">Sửa</span>
+            </div>
+            <div class="tooltip">
+                <i class="fa fa-trash" onclick="xoaKhuyenMai('` + u.MaKM + `')"></i>
+                <span class="tooltiptext">Xóa</span>
+            </div>
+            </td>
         </tr>`;
     }
 
@@ -1405,3 +1414,121 @@ function themKhuyenMai() {
 
 }
 
+function addKhungSuaKhuyenMai(id) {
+    const km = khuyenMai.find(item => item.MaKM === id);
+    var s = `<span class="close" onclick="this.parentElement.style.transform = 'scale(0)';">&times;</span>
+    <form method="post" action="" enctype="multipart/form-data">
+        <table class="overlayTable table-outline table-content table-header">
+            <tr>
+                <th colspan="2">` + km.TenKM + `</th>
+            </tr>
+            <tr>
+                <td>Mã khuyến mãi:</td>
+                <td><input disabled="disabled" type="text" id="makmSua" name="makmSua" value="` + km.MaKM + `"></td>
+            </tr>
+            <tr>
+                <td>Tên khuyến mãi:</td>
+                <td><input type="text" value="` + km.TenKM + `"></td>
+            </tr>
+            <tr>
+                <td>Giá trị:</td>
+                <td><input type="text" value="` + km.GiaTriKM + `"></td>
+            </tr>
+            <tr>
+                <td>Loại khuyến mãi:</td>
+                <td><input type="text" value="` + km.LoaiKM + `"></td>
+            </tr>
+            <tr>
+                <td>Ngày bắt đầu:</td>
+                <td><input type="date" value="` + new Date(km.NgayBD).toISOString().slice(0, 10) + `"></td>
+            </tr>
+            <tr>
+                <td>Ngày kết thúc:</td>
+                <td><input type="date" value="` + new Date(km.NgayKT).toISOString().slice(0, 10) + `"></td>
+            </tr>
+            <tr>
+                <td colspan="2"  class="table-footer"> <button name="submit" type="button" onClick="return suaKhuyenMai('` + km.MaKM + `')">SỬA</button> </td>
+            </tr>
+        </table>`
+
+    var khung = document.getElementById('khungSuaKhuyenMai');
+    khung.innerHTML = s;
+    khung.style.transform = 'scale(1)';
+
+}
+
+function suaKhuyenMai(makm) {
+    const KM = layThongTinKhuyenMaiTuTable('khungSuaKhuyenMai')
+    if (!KM.tenKM) {
+        alert("Chưa điền khuyến mãi")
+        return false;
+    }
+
+    if (!KM.giaTriKM) {
+        alert("Chưa điền giá trị khuyến mãi")
+        return false;
+    }
+
+    if (!KM.NgayBD || !KM.NgayKT || KM.NgayBD > KM.NgayKT) {
+        alert("Ngày bắt đầu, ngày kết thúc không hợp lệ")
+        return false;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "php/xulykhuyenmai.php",
+        dataType: "json",
+        data: {
+            request: "update",
+            makm,
+            dataUpdate: KM
+        },
+        success: function (data) {
+            Swal.fire({
+                type: "success",
+                title: "Cập nhật khuyến mãi thành công"
+            });
+            refreshTableKhuyenMai();
+            var modal = document.getElementById('khungSuaKhuyenMai');
+            modal.style.transform = 'scale(0)';
+        },
+        error: function () {
+            Swal.fire({
+                type: "error",
+                title: "Cập nhật khuyến mãi thất bại"
+            });
+        }
+    });
+    return
+}
+
+function xoaKhuyenMai(makm) {
+    if (confirm(`Bạn muốn xóa khuyến mãi ${makm}`) === true) {
+        $.ajax({
+            type: "POST",
+            url: "php/xulykhuyenmai.php",
+            dataType: "json",
+            data: {
+                request: "delete",
+                makm,
+            },
+            success: function (data) {
+                Swal.fire({
+                    type: "success",
+                    title: "Xóa khuyến mãi thành công"
+                });
+                refreshTableKhuyenMai();
+            },
+            error: function () {
+                Swal.fire({
+                    type: "error",
+                    title: "Xóa khuyến mãi thất bại"
+                });
+            }
+        });
+        return
+    } else {
+        return
+    }
+
+}

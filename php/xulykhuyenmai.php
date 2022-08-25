@@ -19,19 +19,39 @@ switch ($_POST['request']) {
 		break;
 
 	case 'add':
-        $data = $_POST['dataAdd'];
-        $kmAddArr = array(
-            'MaKM' => $data['maKM'],
-            'TenKM' => $data['tenKM'],
-            'GiaTriKM' => $data['giaTriKM'],
-            'LoaiKM' => $data['loaiKM'],
-            'NgayBD' => $data['NgayBD'],
-            'NgayKT' => $data['NgayKT'],
-        );
+		$data = $_POST['dataAdd'];
+		$kmAddArr = array(
+			'MaKM' => $data['maKM'],
+			'TenKM' => $data['tenKM'],
+			'GiaTriKM' => $data['giaTriKM'],
+			'LoaiKM' => $data['loaiKM'],
+			'NgayBD' => $data['NgayBD'],
+			'NgayKT' => $data['NgayKT'],
+		);
 
-        $kmBUS = new KhuyenMaiBUS();
-        die (json_encode($kmBUS->add_new($kmAddArr)));
+		$kmBUS = new KhuyenMaiBUS();
+		die(json_encode($kmBUS->add_new($kmAddArr)));
+		break;
+
+	case 'update':
+		$data = $_POST['dataUpdate'];
+		$id = $_POST['makm'];
+		$kmUpdateArr = array(
+			'TenKM' => $data['tenKM'],
+			'GiaTriKM' => $data['giaTriKM'],
+			'LoaiKM' => $data['loaiKM'],
+			'NgayBD' => $data['NgayBD'],
+			'NgayKT' => $data['NgayKT'],
+		);
+        $w = "MaKM='" . $id . "'";
+        die (json_encode($db->update('khuyenmai', $kmUpdateArr, $w)));
         break;
+	
+	case 'delete':
+		$id = $_POST['makm'];
+		$kmBUS = new KhuyenMaiBUS();
+		die (json_encode($kmBUS->delete_by_id($id)));
+		break;
 	default:
 		# code...
 		break;
