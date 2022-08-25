@@ -535,6 +535,8 @@ function suaSanPham(masp) {
                 title: "Cập nhật sản phẩm thành công"
             });
             refreshTableSanPham();
+            var modal = document.getElementById('khungSuaSanPham');
+            modal.style.transform = 'scale(0)';
         },
         error: function() {
             Swal.fire({
@@ -570,7 +572,7 @@ function addKhungSuaSanPham(masp) {
 
     })
     var s = `<span class="close" onclick="this.parentElement.style.transform = 'scale(0)';">&times;</span>
-    <form method="post" action="" enctype="multipart/form-data" onsubmit="return suaSanPham('` + sp.MaSP + `')">
+    <form method="post" action="" enctype="multipart/form-data">
         <table class="overlayTable table-outline table-content table-header">
             <tr>
                 <th colspan="2">` + sp.TenSP + `</th>
@@ -688,7 +690,7 @@ function addKhungSuaSanPham(masp) {
                 <td><input type="text" value="` + sp.Pin + `"></td>
             </tr>
             <tr>
-                <td colspan="2"  class="table-footer"> <button name="submit">SỬA</button> </td>
+                <td colspan="2"  class="table-footer"> <button name="submit" type="button" onClick="return suaSanPham('` + sp.MaSP + `')">SỬA</button> </td>
             </tr>
         </table>`
 
