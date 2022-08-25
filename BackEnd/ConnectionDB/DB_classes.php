@@ -81,6 +81,13 @@ class NguoiDungBUS extends DB_business
         // them
         parent::add_new($data);
     }
+
+    function capNhapTrangThai($trangthai, $id) {
+        $nguoidung = $this->select_by_id("*", $id);
+        $nguoidung["TrangThai"] = $trangthai;
+
+        return $this->update_by_id($nguoidung, $id);
+    }
 }
 
 // Lớp hóa đơn
