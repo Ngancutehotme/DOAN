@@ -148,7 +148,7 @@ function ajaxKhuyenMai() {
         url: "php/xulykhuyenmai.php",
         dataType: "json",
         data: {
-            request: "getall"
+            request: "getallkm"
         },
         success: function (data, status, xhr) {
             khuyenMai = data
