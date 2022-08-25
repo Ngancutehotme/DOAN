@@ -355,13 +355,13 @@
             <table class="table-header">
                 <tr>
                     <!-- Theo độ rộng của table content -->
-                    <th title="Sắp xếp" style="width: 5%" onclick="sortDonHangTable('stt')">Stt <i class="fa fa-sort"></i></th>
-                    <th title="Sắp xếp" style="width: 10%" onclick="sortDonHangTable('madon')">Tên <i class="fa fa-sort"></i></th>
-                    <th title="Sắp xếp" style="width: 10%" onclick="sortDonHangTable('madon')">Mã khuyến mãi <i class="fa fa-sort"></i></th>
-                    <th title="Sắp xếp" style="width: 10%" onclick="sortDonHangTable('khach')">Loại khuyến mãi <i class="fa fa-sort"></i></th>
-                    <th title="Sắp xếp" style="width: 15%" onclick="sortDonHangTable('sanpham')">Giá trị <i class="fa fa-sort"></i></th>
-                    <th title="Sắp xếp" style="width: 15%" onclick="sortDonHangTable('tongtien')">Ngày bắt đầu <i class="fa fa-sort"></i></th>
-                    <th title="Sắp xếp" style="width: 15%" onclick="sortDonHangTable('ngaygio')">Ngày kết thúc <i class="fa fa-sort"></i></th>
+                    <th title="Sắp xếp" style="width: 5%" onclick="sortKhuyenMaiTable('stt')">Stt <i class="fa fa-sort"></i></th>
+                    <th title="Sắp xếp" style="width: 10%" onclick="sortKhuyenMaiTable('madon')">Tên <i class="fa fa-sort"></i></th>
+                    <th title="Sắp xếp" style="width: 10%" onclick="sortKhuyenMaiTable('madon')">Mã khuyến mãi <i class="fa fa-sort"></i></th>
+                    <th title="Sắp xếp" style="width: 10%" onclick="sortKhuyenMaiTable('khach')">Loại khuyến mãi <i class="fa fa-sort"></i></th>
+                    <th title="Sắp xếp" style="width: 15%" onclick="sortKhuyenMaiTable('sanpham')">Giá trị <i class="fa fa-sort"></i></th>
+                    <th title="Sắp xếp" style="width: 15%" onclick="sortKhuyenMaiTable('tongtien')">Ngày bắt đầu <i class="fa fa-sort"></i></th>
+                    <th title="Sắp xếp" style="width: 15%" onclick="sortKhuyenMaiTable('ngaygio')">Ngày kết thúc <i class="fa fa-sort"></i></th>
                     <th style="width: 10%">Hành động</th>
                 </tr>
             </table>

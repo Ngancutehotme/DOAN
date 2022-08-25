@@ -132,6 +132,14 @@ switch ($_POST['request']) {
         $trangthai = $_POST["trangthai"];
         die (json_encode((new SanPhamBUS())->capNhapTrangThai($trangthai, $id)));
         break;
+    case 'updateSanPhamCoMaKMHetHan': 
+        $makm = $_POST["makm"];
+        $spUpdateArr = array(
+            'MaKM' => 1,
+        );
+        $w = "MaKM='" . $makm . "'";
+        die (json_encode($db->update('sanpham', $spUpdateArr, $w)));
+        break;
 
     default:
         # code...

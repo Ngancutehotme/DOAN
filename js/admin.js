@@ -972,6 +972,15 @@ function sortDonHangTable(loai) {
     decrease = !decrease;
 }
 
+// Sắp xếp
+function sortKhuyenMaiTable(loai) {
+    var list = document.getElementsByClassName('khuyenmai')[0].getElementsByClassName("table-content")[0];
+    var tr = list.getElementsByTagName('tr');
+
+    quickSort(tr, 0, tr.length - 1, loai, getValueOfTypeInTable_DonHang);
+    decrease = !decrease;
+}
+
 // Lấy giá trị của loại(cột) dữ liệu nào đó trong bảng
 function getValueOfTypeInTable_DonHang(tr, loai) {
     var td = tr.getElementsByTagName('td');
@@ -1354,6 +1363,10 @@ function addTableKhuyenMai(data) {
             <td style="width: 16%">` + u.NgayKT + `</td>
             <td style="width: 10%">
             <div class="tooltip">
+                <i class="fa fa-refresh" onclick="updateSanPhamCoMaKMHetHan('` + u.NgayKT + `', '` +u.MaKM + `')"></i>
+                <span class="tooltiptext">Reset</span>
+            </div>
+            <div class="tooltip">
                 <i class="fa fa-wrench" onclick="addKhungSuaKhuyenMai('` + u.MaKM + `')"></i>
                 <span class="tooltiptext">Sửa</span>
             </div>
@@ -1551,4 +1564,35 @@ function xoaKhuyenMai(makm) {
         return
     }
 
+}
+
+function updateSanPhamCoMaKMHetHan(ngayKT, makm) {
+    if (confirm(`Bạn có muốn chuyển các sản phẩm có mã KM là ${makm} về thành 1 không?`)) {
+        if ((new Date(ngayKT) > new Date) ? confirm(`Thời gian khuyến mãi của mã chưa hết! Bạn vẫn muốn tiếp tục?`) : true) {
+            $.ajax({
+                type: "POST",
+                url: "php/xulysanpham.php",
+                dataType: "json",
+                data: {
+                    request: "updateSanPhamCoMaKMHetHan",
+                    makm,
+                },
+                success: function (data) {
+                    Swal.fire({
+                        type: "success",
+                        title: "Cập nhật thành công"
+                    });
+                    refreshTableSanPham();
+                },
+                error: function () {
+                    Swal.fire({
+                        type: "error",
+                        title: "Cập nhật thất bại"
+                    });
+                }
+            });
+
+        }
+    }
+    return
 }
