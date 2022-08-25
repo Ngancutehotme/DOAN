@@ -388,36 +388,28 @@
                             <th colspan="2">Thêm Khuyến Mãi</th>
                         </tr>
                         <tr>
-                            <td>Mã sản phẩm:</td>
+                            <td>Mã khuyến mãi:</td>
                             <td><input disabled="disabled" type="text" id="maKMThem" name="maKMThem"></td>
                         </tr>
                         <tr>
                             <td>Tên khuyến mãi:</td>
-                            <td><input type="text"></td>
+                            <td><input require type="text"></td>
                         </tr>
                         <tr>
-                            <td>Mã khuyến mãi:</td>
-                            <td><input type="text"></td>
+                            <td>Giá trị:</td>
+                            <td><input require type="number"></td>
                         </tr>
                         <tr>
                             <td>Loại khuyến mãi:</td>
-                            <td>
-                            <select id="loaiKM" name="loaiKM">
-                                <option value="Nothing">Không khuyến mãi</option>
-                                <option value="GiamGia">Giảm giá</option>
-                                <option value="GiaReOnline">Giá rẻ online</option>
-                                <option value="TraGop">Trả góp</option>
-                                <option value="MoiRaMat">Mới ra mắt</option>
-                            </select>
-                            </td>
+                            <td><input type="text"></td>
                         </tr>
                         <tr>
                             <td>Ngày bắt đầu:</td>
-                            <td><input type="text"></td>
+                            <td><input require type="date"></td>
                         </tr>
                         <tr>
                             <td>Ngày kết thúc:</td>
-                            <td><input type="text"></td>
+                            <td><input require type="date"></td>
                         </tr>
                         <tr>
                             <td colspan="2" class="table-footer"> <button name="submit" type="button" onClick="themKhuyenMai()">THÊM</button> </td>
