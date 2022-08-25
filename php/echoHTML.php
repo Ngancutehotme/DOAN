@@ -106,58 +106,133 @@ function addHome()
     </div>
     <div class="companyMenu group flexContain"></div>
 
-    <div class="timNangCao">
-        <div class="flexContain">
-            <div class="pricesRangeFilter dropdown">
-                <button class="dropbtn">Giá tiền</button>
-                <div class="dropdown-content"></div>
+    <div class="wrapper">
+        <div class="timNangCao">
+            <div class="choosedFilter flexContain"></div> <!-- Những bộ lọc đã chọn -->
+            <div class="flexContain">
+                <div class="sortFilter dropdown">
+                    <button class="dropbtn btnsort">Sắp xếp</button>
+                    <div class="dropdown-content"></div>
+                </div>            
             </div>
-
-            <div class="promosFilter dropdown">
-                <button class="dropbtn">Khuyến mãi</button>
-                <div class="dropdown-content"></div>
-            </div>
-
-            <div class="starFilter dropdown">
-                <button class="dropbtn">Số lượng sao</button>
-                <div class="dropdown-content"></div>
-            </div>
-
-            <div class="sortFilter dropdown">
-                <button class="dropbtn">Sắp xếp</button>
-                <div class="dropdown-content"></div>
-            </div>            
-        </div>
-        
+            <div class="filter-type">Lọc theo giá tiền</div>
+            <form name="priceForm">
+                <label class="radio-label">
+                    <input type="radio" value="1" name="price">
+                    <span class="checkmark"></span>
+                    Dưới 2 triệu
+                </label>
+                <label class="radio-label">
+                    <input type="radio" value="2" name="price">
+                    <span class="checkmark"></span>
+                    Từ 2 - 6 triệu
+                </label>
+                <label class="radio-label">
+                    <input type="radio" value="3" name="price">
+                    <span class="checkmark"></span>
+                    Từ 6 - 10 triệu
+                </label>
+                <label class="radio-label">
+                    <input type="radio" value="4" name="price">
+                    <span class="checkmark"></span>
+                    Từ 10 - 20 triệu
+                </label>
+                <label class="radio-label">
+                    <input type="radio" value="5" name="price">
+                    <span class="checkmark"></span>
+                    Từ 20 - 50 triệu
+                </label>
+            </form>
+            <div class="filter-type">Lọc theo đánh giá</div>
+            <form name="starForm">
+                <label class="radio-label">
+                    <input type="radio" value="0" name="star">
+                    <span class="checkmark"></span>
+                    Từ 0 sao trở lên
+                </label>
+                <label class="radio-label">
+                    <input type="radio" value="1" name="star">
+                    <span class="checkmark"></span>
+                    Từ 1 sao trở lên
+                </label>
+                <label class="radio-label">
+                    <input type="radio" value="2" name="star">
+                    <span class="checkmark"></span>
+                    Từ 2 sao trở lên
+                </label>
+                <label class="radio-label">
+                    <input type="radio" value="3" name="star">
+                    <span class="checkmark"></span>
+                    Từ 3 sao trở lên
+                </label>
+                <label class="radio-label">
+                    <input type="radio" value="4" name="star">
+                    <span class="checkmark"></span>
+                    Từ 4 sao trở lên
+                </label>
+                <label class="radio-label">
+                    <input type="radio" value="5" name="star">
+                    <span class="checkmark"></span>
+                    Từ 5 sao trở lên
+                </label>
+            </form>
+            <div class="filter-type">Lọc theo khuyến mãi</div>
+            <form name="promotionForm">
+                <label class="radio-label">
+                    <input type="radio" value="Nothing" name="promo">
+                    <span class="checkmark"></span>
+                    Không khuyến mãi
+                </label>
+                <label class="radio-label">
+                    <input type="radio" value="giamgia" name="promo">
+                    <span class="checkmark"></span>
+                    Giảm giá
+                </label>
+                <label class="radio-label">
+                    <input type="radio" value="tragop" name="promo">
+                    <span class="checkmark"></span>
+                    Trả góp
+                </label>
+                <label class="radio-label">
+                    <input type="radio" value="moiramat" name="promo">
+                    <span class="checkmark"></span>
+                    Mới ra mắt
+                </label>
+                <label class="radio-label">
+                    <input type="radio" value="giareonline" name="promo">
+                    <span class="checkmark"></span>
+                    Giá rẻ online
+                </label>
+            </form>
         <div>
-            <input type="text" class="js-range-slider" id="demoSlider">
+        <!-- END timNangCao -->
         </div>
 
     </div> <!-- End khung chọn bộ lọc -->
 
-    <div class="choosedFilter flexContain"></div> <!-- Những bộ lọc đã chọn -->
-    <hr>
-
     <!-- Mặc định mới vào trang sẽ ẩn đi, nế có filter thì mới hiện lên -->
     <div class="contain-products" style="display:none">
-    <div class="filterName">
-        <div id="divSoLuongSanPham"></div>
-        <input type="text" placeholder="Lọc trong trang theo tên..." onkeyup="filterProductsName(this)">
-        <div class="loader" style="display: none"></div>
-    </div> <!-- End FilterName -->
+        <div class="filterName">
+            <div id="divSoLuongSanPham"></div>
+            <input type="text" placeholder="Lọc trong trang theo tên..." onkeyup="filterProductsName(this)">
+            <div class="loader" style="display: none"></div>
+        </div> <!-- End FilterName -->
 
-    <ul id="products" class="homeproduct group flexContain">
-        <div id="khongCoSanPham">
-            <i class="fa fa-times-circle"></i>
-            Không có sản phẩm nào
-        </div> <!-- End Khong co san pham -->
-    </ul><!-- End products -->
+        <ul id="products" class="homeproduct group flexContain">
+            <div id="khongCoSanPham">
+                <i class="fa fa-times-circle"></i>
+                Không có sản phẩm nào
+            </div> <!-- End Khong co san pham -->
+        </ul><!-- End products -->
 
-    <div class="pagination"></div>
+        <div class="pagination"></div>
     </div>
 
+    <!-- End contain-products -->
+
     <!-- Div hiển thị khung sp hot, khuyến mãi, mới ra mắt ... -->
-    <div class="contain-khungSanPham"></div>';
+    <div class="contain-khungSanPham"></div>
+    </div>';
 }
 
 // Thêm chi tiết sản phẩm
