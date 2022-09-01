@@ -1,0 +1,6 @@
+{
+    "require": {
+        "swiftmailer/swiftmailer": "5.4.12",
+        "sendgrid/sendgrid": "^6.0"
+    }
+}
