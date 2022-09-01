@@ -5,8 +5,7 @@ var DataCompany = [];
 var CurrentFilters = [];
 let DSKM = [];
 
-window.onload = function() {
-    khoiTaoLocKM();
+window.onload = function () {
     locTheoGia();
     locTheoDanhGia();
 
@@ -46,24 +45,23 @@ window.onload = function() {
 };
 
 // ============================== web2 ===========================
-function hienThiKhungSanPhamMacDinh() {
-
+async function hienThiKhungSanPhamMacDinh() {
+    await khoiTaoLocKM();
     $('.contain-khungSanPham').html('');
 
-    var soLuong = 4; // màn hình nhỏ thì hiển thị 4 sp, to thì hiển thị 5
-
-    // Các màu
-    var yellow_red = ['#ff9c00', '#ec1f1f'];
-    var blue = ['#42bcf4', '#004c70'];
-    var green = ['#5de272', '#007012'];
-
+    const soLuong = 4; // màn hình nhỏ thì hiển thị 4 sp, to thì hiển thị 5
+    const color = [['#ff9c00', '#ec1f1f'], ['#42bcf4', '#004c70'], ['#5de272', '#007012']]
+    let tt = 0;
     // Thêm các khung sản phẩm
-    addKhungSanPham('NỔI BẬT NHẤT', yellow_red, ['star=0', 'sort=SoDanhGia-desc', 'page=0'], soLuong);
-    addKhungSanPham('SẢN PHẨM MỚI', blue, ['promo=moiramat', 'sort=SoDanhGia-desc', 'page=0'], soLuong);
-    addKhungSanPham('TRẢ GÓP 0%', yellow_red, ['promo=tragop', 'page=0'], soLuong);
-    addKhungSanPham('GIÁ SỐC ONLINE', green, ['promo=giareonline', 'page=0'], soLuong);
-    addKhungSanPham('GIẢM GIÁ LỚN', yellow_red, ['promo=giamgia', 'page=0'], soLuong);
-    addKhungSanPham('GIÁ RẺ CHO MỌI NHÀ', green, ['price=0-3000000', 'sort=DonGia-asc', 'page=0'], soLuong);
+    addKhungSanPham('NỔI BẬT NHẤT', color[tt], ['star=0', 'sort=SoDanhGia-desc', 'page=0'], soLuong);
+    DSKM.forEach(item => {
+        if (item.LoaiKM !== 'Nothing') {
+            tt = (tt === color.length - 1) ? 0 : tt + 1
+            addKhungSanPham(item.TenKM.toUpperCase(), color[tt], [`promo=${item.MaKM}`, 'page=0'], soLuong);
+        }
+    })
+    tt = (tt === color.length - 1) ? 0 : tt + 1
+    addKhungSanPham('GIÁ RẺ CHO MỌI NHÀ', color[tt], ['price=0-3000000', 'sort=DonGia-asc', 'page=0'], soLuong);
 }
 
 function setupBanner() {
@@ -75,7 +73,7 @@ function setupBanner() {
         data: {
             request: "getallbanners",
         },
-        success: function(data, status, xhr) {
+        success: function (data, status, xhr) {
             for (var url of data) {
                 var realPath = url.split('../').join('');
                 addBanner(realPath, realPath);
@@ -106,7 +104,7 @@ function setupBanner() {
                 }
             });
         },
-        error: function() {
+        error: function () {
             Swal.fire({
                 type: "error",
                 title: "Lỗi lấy dữ liệu hình ảnh banners (trangchu.js > setUpBanner)",
@@ -123,13 +121,13 @@ function setupBanner() {
         data: {
             request: "getsmallbanner",
         },
-        success: function(data, status, xhr) {
+        success: function (data, status, xhr) {
             for (var url of data) {
                 var realPath = url.split('../').join('');
                 addSmallBanner(realPath);
             }
         },
-        error: function() {
+        error: function () {
             Swal.fire({
                 type: "error",
                 title: "Lỗi lấy dữ liệu hình ảnh small banners (trangchu.js > setUpBanner)",
@@ -149,13 +147,13 @@ function setupCompany() {
         data: {
             request: "getall",
         },
-        success: function(data, status, xhr) {
+        success: function (data, status, xhr) {
             DataCompany = data;
             for (var c of data) {
                 addCompany("img/company/" + c.HinhAnh, c.MaLSP);
             }
         },
-        error: function(e) {
+        error: function (e) {
             Swal.fire({
                 type: "error",
                 title: "Lỗi lấy dữ liệu loại sản phẩm (trangchu.js > setupCompany)",
@@ -167,7 +165,7 @@ function setupCompany() {
 
 function addProductsFromList(list, filters) {
     DanhSachSanPham = list; // lưu danh sách hiện thời
-    $("#divSoLuongSanPham").html("Tìm thấy <span>"+ list.length + "</span> sản phẩm")
+    $("#divSoLuongSanPham").html("Tìm thấy <span>" + list.length + "</span> sản phẩm")
 
     if (list.length == 0) {
         alertNotHaveProduct(false); // nếu length = 0 thì hiện ko có sản phẩm
@@ -220,7 +218,7 @@ function chuyenTrang(vitriTrang) {
 }
 
 function filtersAjax(filters, callback) {
-    if(filters.length == 0) {
+    if (filters.length == 0) {
         removeAllFilters();
         return;
     }
@@ -241,7 +239,7 @@ function filtersAjax(filters, callback) {
             request: "phanTich_Filters",
             filters: filters
         },
-        success: function(data, status, xhr) {
+        success: function (data, status, xhr) {
 
             if (callback) callback(data);
             else {
@@ -251,7 +249,7 @@ function filtersAjax(filters, callback) {
                 $(".loader").css("display", "none");
             }
         },
-        error: function(e) {
+        error: function (e) {
             Swal.fire({
                 type: "error",
                 title: "Lỗi lấy dữ liệu sản phẩm filters (trangchu.js > filtersAjax)",
@@ -271,14 +269,14 @@ function ajaxThemSanPham(p, onSuccess, onFail) {
             request: "addFromWeb1",
             sanpham: p
         },
-        success: function(data, status, xhr) {
+        success: function (data, status, xhr) {
             if (onSuccess) onSuccess(data);
             else {
                 console.log('Thêm thành công ');
                 console.log(data);
             }
         },
-        error: function(e) {
+        error: function (e) {
             if (onFail) onFail(e);
             else {
                 Swal.fire({
@@ -383,11 +381,11 @@ function addKhungSanPham(tenKhung, color, filters, len) {
                 <div class="listSpTrongKhung flexContain" data-tenkhung="` + tenKhung + `">
                     <div class="loader"></div>
                 </div>
-                <a class="xemTatCa" onclick='filtersAjax(`+JSON.stringify(filters)+`)' style="` + borderA + `" data-tenkhung="` + tenKhung + `">
+                <a class="xemTatCa" onclick='filtersAjax(`+ JSON.stringify(filters) + `)' style="` + borderA + `" data-tenkhung="` + tenKhung + `">
                 </a>
               </div> <hr>`;
-
-
+    
+              
     // thêm khung vào contain-khung
     document.getElementsByClassName('contain-khungSanPham')[0].innerHTML += s;
 
@@ -439,16 +437,16 @@ function themNutPhanTrang(soTrang, trangHienTai) {
 function pushState(filters) {
     var str = "index.php?";
     var fsort = "";
-    for(var f of filters) {
-        if(f.split('=')[0] != 'sort') {
+    for (var f of filters) {
+        if (f.split('=')[0] != 'sort') {
             str += f + "&";
         } else {
             fsort = f;
         }
     }
-    if(fsort != '') {
+    if (fsort != '') {
         str += fsort;
-    } else if(str.indexOf("&") >= 0) {
+    } else if (str.indexOf("&") >= 0) {
         str = str.slice(0, str.length - 1); // loại bỏ "&" dư thừa
     }
 
@@ -501,7 +499,7 @@ function craeteRemoveFilters(type) {
 
 function removeAllFilters() {
     CurrentFilters = [];
-    if($('.contain-khungSanPham').html() == "") {
+    if ($('.contain-khungSanPham').html() == "") {
         hienThiKhungSanPhamMacDinh();
     }
     pushState([]);
@@ -534,7 +532,7 @@ function removeAllFilters() {
 // Thêm bộ lọc đã chọn vào html
 function addChoosedFilter(type, textInside) {
     var divChoosedFilter = document.getElementsByClassName('choosedFilter')[0];
-    divChoosedFilter.innerHTML += (`<a onclick="filtersAjax(craeteRemoveFilters('`+type+`'))">
+    divChoosedFilter.innerHTML += (`<a onclick="filtersAjax(craeteRemoveFilters('` + type + `'))">
         <h3>` + textInside + ` <i class="fa fa-close"></i></h3>
         </a>`);
 }
@@ -776,7 +774,7 @@ function locTheoGia() {
         5: '20000000-5000000',
     }
     for (var i = 0; i < price.length; i++) {
-        price[i].addEventListener('change', function() {
+        price[i].addEventListener('change', function () {
             if (this !== prev) {
                 prev = this;
             }
@@ -789,7 +787,7 @@ function locTheoDanhGia() {
     var price = document.starForm.star;
     var prev = null;
     for (var i = 0; i < price.length; i++) {
-        price[i].addEventListener('change', function() {
+        price[i].addEventListener('change', function () {
             if (this !== prev) {
                 prev = this;
             }
@@ -802,7 +800,7 @@ function locTheoKhuyenMai() {
     var price = document.promotionForm.promo;
     var prev = null;
     for (var i = 0; i < price.length; i++) {
-        price[i].addEventListener('change', function() {
+        price[i].addEventListener('change', function () {
             if (this !== prev) {
                 prev = this;
             }
@@ -812,7 +810,7 @@ function locTheoKhuyenMai() {
 }
 
 function khoiTaoLocKM() {
-    $.ajax({
+    return $.ajax({
         type: "POST",
         url: "php/xulykhuyenmai.php",
         dataType: "json",
@@ -820,11 +818,11 @@ function khoiTaoLocKM() {
         data: {
             request: "getall",
         },
-        success: function(data) {
+        success: function (data) {
             DSKM = data;
             addLocKhuyenMai(data);
         },
-        error: function(e) {
+        error: function (e) {
             Swal.fire({
                 type: "error",
                 title: "Lỗi lấy thông tin khuyến mãi",
@@ -836,15 +834,16 @@ function khoiTaoLocKM() {
 
 function addLocKhuyenMai(KM) {
     let fieldKm = ''
-    console.log(KM);
     KM.forEach(element => {
-        fieldKm += `
+        if (element.LoaiKM !== 'Nothing') {
+            fieldKm += `
             <label class="radio-label">
                 <input type="radio" value="${element.MaKM}" name="promo">
                 <span class="checkmark"></span>
                 ${element.TenKM}
             </label>
         `
+        }
     });
     document.getElementById('promotionForm').innerHTML = fieldKm;
     locTheoKhuyenMai();

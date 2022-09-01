@@ -1448,7 +1448,7 @@ function themKhuyenMai() {
 }
 
 function addKhungSuaKhuyenMai(id) {
-    const km = khuyenMai.find(item => item.MaKM === id);
+    const km = danhSachKhuyenMai.find(item => item.MaKM === id);
     var s = `<span class="close" onclick="this.parentElement.style.transform = 'scale(0)';">&times;</span>
     <form method="post" action="" enctype="multipart/form-data">
         <table class="overlayTable table-outline table-content table-header">
