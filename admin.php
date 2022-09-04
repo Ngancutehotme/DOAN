@@ -141,6 +141,10 @@
                             <td><input disabled="disabled" type="text" id="maspThem" name="maspThem"></td>
                         </tr>
                         <tr>
+                            <td>Seri sản phẩm:</td>
+                            <td><input disabled="disabled" type="text" id="seriThem" name="seriThem"></td>
+                        </tr>
+                        <tr>
                             <td>Tên sản phẩm:</td>
                             <td><input type="text"></td>
                         </tr>

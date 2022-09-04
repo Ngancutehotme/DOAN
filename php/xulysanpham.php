@@ -70,6 +70,7 @@ switch ($_POST['request']) {
         $spAddArr = array(
             'MaSP' => $data['masp'],
             'MaLSP' => $data['company'],
+            'Seri' => $data['seri'],
             'TenSP' => $data['name'],
             'DonGia' => $data['price'],
             'SoLuong' => $data['amount'],
@@ -99,6 +100,7 @@ switch ($_POST['request']) {
         $spUpdateArr = array(
             'MaSP' => $data['masp'],
             'MaLSP' => $data['company'],
+            'Seri' => $data['seri'],
             'TenSP' => $data['name'],
             'DonGia' => $data['price'],
             'SoLuong' => $data['amount'],

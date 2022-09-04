@@ -2,7 +2,6 @@
 
 require_once("../BackEnd/ConnectionDB/DB_classes.php");
 require_once("../vendor/swiftmailer/swiftmailer/lib/swift_required.php");
-// require_once("swift/lib/swift_required.php");
 
 if (!isset($_POST['request']) && !isset($_GET['request'])) die();
 
@@ -45,9 +44,9 @@ switch ($_POST['request']) {
 		Địa chỉ: {$dulieu["diaChiNguoiNhan"]}
 		Tổng tiền: {$dulieu["tongTien"]}
 		Xem chi tiết: http://localhost:8000/DoAn/admin.php";
-		$from_name = "Ngân Vũ";
-		$from_addr = "nganvu18102k@gmail.com";
-		$sendmail = sendmail($tos, $subject, $body, $from_name, $from_addr);
+		$from_name = "NganVu";
+		$from_addr = "mr.sendgrid@gmail.com";
+		sendmail($tos, $subject, $body, $from_name, $from_addr);
 		die(json_encode(true));
 		break;
 }
@@ -56,7 +55,7 @@ function sendmail($tos, $subject, $body, $from_name, $from_addr)
 {
 	$transport = (new Swift_SmtpTransport('smtp.sendgrid.net', 587, 'tls'))
 		->setUsername('apikey')
-		->setPassword('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');
+		->setPassword('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');
 
 	$to_mails = is_array($tos) ? $tos : explode(',', $tos);
 	$res = _validate_mails($to_mails, $body);
@@ -133,7 +132,7 @@ function _send($mailer, $message, $tos)
 	$result_num = 0;
 
 	try {
-		$sn = $mailer->send($message);
+		$mailer->send($message);
 		$result_num = count($tos);
 	} catch (\Swift_TransportException $e) {
 		return $e;

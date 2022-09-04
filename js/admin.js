@@ -5,7 +5,7 @@ var khuyenMai = [];
 var danhSachKhuyenMai = [];
 
 window.onload = function () {
-
+    
     document.getElementById("btnDangXuat").onclick = function () {
         checkDangXuat(() => {
             window.location.href = "login.php"
@@ -29,6 +29,12 @@ window.onload = function () {
     }, (e) => {
         document.body.innerHTML = `<h1 style="color:red; with:100%; text-align:center; margin: 50px;"> Truy cập bị từ chối.. </h1>`;
     });
+}
+
+function UUIDGenerator() {
+    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+        (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16)
+    );
 }
 
 function refreshTableSanPham() {
@@ -331,29 +337,31 @@ function layThongTinSanPhamTuTable(id) {
     var tr = khung.getElementsByTagName('tr');
 
     var masp = tr[1].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
-    var name = tr[2].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
-    var company = tr[3].getElementsByTagName('td')[1].getElementsByTagName('select')[0].value;
+    var seri = tr[2].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
+    var name = tr[3].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
+    var company = tr[4].getElementsByTagName('td')[1].getElementsByTagName('select')[0].value;
     var img = document.getElementById('hinhanh').value;
     var oldImg = document.getElementById('hinhanhcu')?.value;
-    var price = tr[5].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
-    var amount = tr[6].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
-    var star = tr[7].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
-    var rateCount = tr[8].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
-    var promoName = tr[9].getElementsByTagName('td')[1].getElementsByTagName('select')[0].value;
-    var promoValue = tr[10].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
+    var price = tr[6].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
+    var amount = tr[7].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
+    var star = tr[8].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
+    var rateCount = tr[9].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
+    var promoName = tr[10].getElementsByTagName('td')[1].getElementsByTagName('select')[0].value;
+    var promoValue = tr[11].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
 
-    var screen = tr[12].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
-    var os = tr[13].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
-    var camara = tr[14].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
-    var camaraFront = tr[15].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
-    var cpu = tr[16].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
-    var ram = tr[17].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
-    var rom = tr[18].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
-    var microUSB = tr[19].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
-    var battery = tr[20].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
+    var screen = tr[13].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
+    var os = tr[14].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
+    var camara = tr[15].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
+    var camaraFront = tr[16].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
+    var cpu = tr[17].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
+    var ram = tr[18].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
+    var rom = tr[19].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
+    var microUSB = tr[20].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
+    var battery = tr[21].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
 
     return {
         "name": name,
+        "seri": seri,
         "img": img,
         "oldImg": oldImg,
         "price": price,
@@ -452,12 +460,11 @@ function resetForm() {
     var khung = document.getElementById('khungThemSanPham');
     var tr = khung.getElementsByTagName('tr');
 
-    tr[2].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value = "";
-    tr[4].getElementsByTagName('td')[1].getElementsByTagName('img')[0].src = "";
-    tr[5].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value = "";
-    tr[6].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value = "0";
+    tr[3].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value = "";
+    tr[5].getElementsByTagName('td')[1].getElementsByTagName('img')[0].src = "";
+    tr[6].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value = "";
+    tr[7].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value = "0";
 
-    tr[12].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value = "";
     tr[13].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value = "";
     tr[14].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value = "";
     tr[15].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value = "";
@@ -466,6 +473,7 @@ function resetForm() {
     tr[18].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value = "";
     tr[19].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value = "";
     tr[20].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value = "";
+    tr[21].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value = "";
 }
 
 
@@ -484,6 +492,7 @@ function autoMaSanPham(company) {
     // hàm tự tạo mã cho sản phẩm mới
     var autoMaSP = list_products[list_products.length - 1].MaSP;
     document.getElementById('maspThem').value = parseInt(autoMaSP) + 1;
+    document.getElementById('seriThem').value = UUIDGenerator();
 }
 
 // Xóa
@@ -594,6 +603,7 @@ function addKhungSuaSanPham(masp) {
     let loaiSP = ''
     let khuyenmai = ''
     let GTKM = '<input disabled="disabled" id="giaTriKMUpdate" type="text" value="0">';
+    const seri = sp.Seri ? sp.Seri : UUIDGenerator();
     loai_san_pham.forEach(item => {
         const selected = item.MaLSP === sp.MaLSP ? 'selected=selected' : ''
         loaiSP += `<option ${selected} value="${item.MaLSP}">${item.TenLSP}</option>`
@@ -616,6 +626,10 @@ function addKhungSuaSanPham(masp) {
             <tr>
                 <td>Mã sản phẩm:</td>
                 <td><input disabled="disabled" type="text" id="maspSua" name="maspSua" value="` + sp.MaSP + `"></td>
+            </tr>
+            <tr>
+                <td>Seri sản phẩm:</td>
+                <td><input disabled="disabled" type="text" id="seri" name="seri" value="` + seri + `"></td>
             </tr>
             <tr>
                 <td>Tên sẩn phẩm:</td>
@@ -886,7 +900,7 @@ function duyet(maDonHang, trangThai, duyetDon) {
     if (duyetDon) {
         const valStatus = trangThai + 1
         const status = formatStatuses(valStatus.toString())
-        if (trangThai !== 4) {
+        if (trangThai !== 3) {
             Swal.fire({
                 type: 'info',
                 title: `Bạn có muốn chuuyển trạng thái đơn hàng mã ${maDonHang} thành '${status}'?`,
@@ -903,7 +917,7 @@ function duyet(maDonHang, trangThai, duyetDon) {
             });
         }
     } else {
-        const trangThaiHuy = '4'
+        const trangThaiHuy = '3'
         if (trangThai !== parseInt(trangThaiHuy)) {
             Swal.fire({
                 type: 'warning',
@@ -1363,7 +1377,7 @@ function addTableKhuyenMai(data) {
             <td style="width: 16%">` + u.NgayKT + `</td>
             <td style="width: 10%">
             <div class="tooltip">
-                <i class="fa fa-refresh" onclick="updateSanPhamCoMaKMHetHan('` + u.NgayKT + `', '` +u.MaKM + `')"></i>
+                <i class="fa fa-refresh" onclick="updateSanPhamCoMaKMHetHan('` + u.NgayKT + `', '` + u.MaKM + `')"></i>
                 <span class="tooltiptext">Reset</span>
             </div>
             <div class="tooltip">

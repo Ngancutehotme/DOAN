@@ -93,7 +93,7 @@ function addProductToTable(listProduct) {
         var p = listProduct[i];
         var masp = p.MaSP;
         var soluongSp = p.SoLuongTrongGio;
-        var price = Number(p.DonGia) - Number(p.KM.GiaTriKM);
+        var price = (Number(p.DonGia) - Number(p.KM.GiaTriKM)) > 0 ? (Number(p.DonGia) - Number(p.KM.GiaTriKM)) : 0;
         var thanhtien = price * soluongSp;
 
         s += `
@@ -247,8 +247,8 @@ function htmlThanhToan(userHienTai) {
 		  <div class="form-group " ${disabled}>
 		    <select class="browser-default custom-select" id="trangThai">
 			  <option value="0" selected>Đang chờ xử lý</option>
-			  <option value="1">Đã giao hàng</option>
-			  <option value="2">Đã hủy</option>
+			  <option value="2">Đã giao hàng</option>
+			  <option value="3">Đã hủy</option>
 			</select>
 		  </div>
 		</form>

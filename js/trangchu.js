@@ -8,7 +8,7 @@ let DSKM = [];
 window.onload = function () {
     locTheoGia();
     locTheoDanhGia();
-
+    khoiTao();
     // autocomplete cho khung tim kiem
     // autocomplete(document.getElementById('search-box'), list_products);
 
