@@ -5,7 +5,7 @@ var khuyenMai = [];
 var danhSachKhuyenMai = [];
 
 window.onload = function () {
-    
+
     document.getElementById("btnDangXuat").onclick = function () {
         checkDangXuat(() => {
             window.location.href = "login.php"
@@ -15,13 +15,13 @@ window.onload = function () {
     var donhang = document.getElementsByClassName('don-hang')[0];
     donhang.classList.add('active');
 
-    getCurrentUser((user) => {
+    getCurrentUser(async (user) => {
         if (user != null) {
             if (user.MaQuyen != 1) {
-                addEventChangeTab();
-                addThongKe();
-                refreshTableDonHang();
-                openTab('Đơn Hàng');
+                await addEventChangeTab();
+                await addThongKe();
+                await refreshTableDonHang();
+                await openTab('Đơn Hàng');
             }
         } else {
             document.body.innerHTML = `<h1 style="color:red; with:100%; text-align:center; margin: 50px;"> Truy cập bị từ chối.. </h1>`;
@@ -68,7 +68,6 @@ function addChart(id, chartOption) {
 }
 
 function addThongKe() {
-    const labels = ["Apple", "Samsung", "Xiaomi", "Vivo", "Oppo", "Mobiistar"];
     $.ajax({
         type: "POST",
         url: "php/xulythongke.php",
@@ -77,69 +76,110 @@ function addThongKe() {
             request: "getSoLuongBanRa",
         },
         success: function (data, status, xhr) {
+            const labels = data.map(item => item.TenLSP)
             const dataReder = labels.map(item => data.find(e => item === e.TenLSP)?.tong || 0)
-            var dataChart = {
-                type: 'bar',
-                data: {
-                    labels,
-                    datasets: [{
-                        label: 'Số lượng bán ra',
-                        data: dataReder,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(255, 206, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(153, 102, 255, 0.2)',
-                            'rgba(255, 159, 64, 0.2)'
-                        ],
-                        borderColor: [
-                            'rgba(255,99,132,1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)'
-                        ],
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    title: {
-                        fontColor: '#fff',
-                        fontSize: 25,
-                        display: true,
-                        text: 'Sản phẩm bán ra'
-                    }
-                }
-            };
-
-            var barChart = copyObject(dataChart);
-            barChart.type = 'bar';
+            var barChart = dataCharts('bar', labels, 'Lượng bán ra của top 5 nhãn hàng/tháng', dataReder, 'Top 5 nhãn hàng bán chạy/tháng')
             addChart('myChart1', barChart);
 
         },
         error: function (e) {
             Swal.fire({
                 type: "error",
-                title: "Lỗi lấy dữ liệu sản phẩm (admin.js > refreshTableSanPham)",
+                title: "Lỗi lấy dữ liệu lượng bán ra của top 5 nhãn hàng/tháng",
+                html: e.responseText
+            });
+            console.log(e.responseText)
+        }
+    });
+    $.ajax({
+        type: "POST",
+        url: "php/xulythongke.php",
+        dataType: "json",
+        data: {
+            request: "top5SanPhamBanChayNhat",
+        },
+        success: function (data, status, xhr) {
+            const labels = data.map(item => item.TenSP)
+            const dataReder = labels.map(item => data.find(e => item === e.TenSP)?.luongBan || 0)
+            var doughnutChart = dataCharts('doughnut', labels, 'Lượng bán ra', dataReder, 'Top 5 sản phẩm bán chạy nhất')
+            addChart('myChart2', doughnutChart);
+        },
+        error: function (e) {
+            Swal.fire({
+                type: "error",
+                title: "Lỗi lấy dữ liệu top 5 sản phẩm bán chạy nhất",
+                html: e.responseText
+            });
+            console.log(e.responseText)
+        }
+    });
+    $.ajax({
+        type: "POST",
+        url: "php/xulythongke.php",
+        dataType: "json",
+        data: {
+            request: "top5SanPhamCoTongDoanhThuCaoNhat",
+        },
+        success: function (data, status, xhr) {
+            const labels = data.map(item => item.TenSP)
+            const dataReder = labels.map(item => (data.find(e => item === e.TenSP)?.tongDoanhThu) || 0)
+            // const d = dataReder.map(item => String(Number(item).toLocaleString('it-IT', { style: 'currency', currency: 'VND' })))
+            const pieChart = dataCharts('pie', labels, 'Tổng doanh thu', dataReder, 'Top 5 sản phẩm có tổng doanh thu cao nhất')
+            addChart('myChart3', pieChart);
+
+        },
+        error: function (e) {
+            Swal.fire({
+                type: "error",
+                title: "Lỗi lấy dữ liệu top 5 sản phẩm có tổng doanh thu cao nhất",
                 html: e.responseText
             });
             console.log(e.responseText)
         }
     });
 
-    // var doughnutChart = copyObject(dataChart);
-    // doughnutChart.type = 'doughnut';
-    // addChart('myChart2', doughnutChart);
-
-    // var pieChart = copyObject(dataChart);
-    // pieChart.type = 'pie';
-    // addChart('myChart3', pieChart);
 
     // var lineChart = copyObject(dataChart);
     // lineChart.type = 'line';
     // addChart('myChart4', lineChart);
+}
+
+function dataCharts(type, labels, label, dataReder, text) {
+    return {
+        type,
+        data: {
+            labels,
+            datasets: [{
+                label,
+                data: dataReder,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            title: {
+                fontColor: '#fff',
+                fontSize: 25,
+                display: true,
+                text
+            }
+        }
+    };
 }
 
 function ajaxLoaiSanPham() {
