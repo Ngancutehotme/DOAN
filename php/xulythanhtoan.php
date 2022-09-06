@@ -42,10 +42,9 @@ switch ($_POST['request']) {
 		Người nhận: {$dulieu["tenNguoiNhan"]}
 		SDT: {$dulieu["sdtNguoiNhan"]}
 		Địa chỉ: {$dulieu["diaChiNguoiNhan"]}
-		Tổng tiền: {$dulieu["tongTien"]}
-		Xem chi tiết: http://localhost:8000/DoAn/admin.php";
+		Tổng tiền: {$dulieu["tongTien"]}";
 		$from_name = "NganVu";
-		$from_addr = "mr.sendgrid@gmail.com";
+		$from_addr = "mr.sendgrid@gmail.com"; //nguyenthixuyen1471980@gmail.com
 		sendmail($tos, $subject, $body, $from_name, $from_addr);
 		die(json_encode(true));
 		break;
@@ -56,7 +55,7 @@ function sendmail($tos, $subject, $body, $from_name, $from_addr)
 	$transport = (new Swift_SmtpTransport('smtp.sendgrid.net', 587, 'tls'))
 		->setUsername('apikey')
 		->setPassword('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');
-
+		//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
 	$to_mails = is_array($tos) ? $tos : explode(',', $tos);
 	$res = _validate_mails($to_mails, $body);
 	$valid_mails = $res['valid_mails'];

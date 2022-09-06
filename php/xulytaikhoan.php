@@ -24,6 +24,9 @@
 			}
 			die (json_encode(null));
 			break;
+		case 'add':
+			add();
+			break;
 		
 		default:
 			# code...
@@ -95,5 +98,40 @@
 		}  
 
 		die (json_encode(null));
+	}
+
+	function add() {
+		$data = $_POST['data'];
+		$ho = $data['ho'];
+		$ten = $data['ten'];
+		$gioiTinh = $data['gioiTinh'];
+		$sdt = $data['sdt'];
+		$email = $data['email'];
+		$diaChi = $data['diaChi'];
+		$ngaySinh = $data['ngaySinh'];
+		$xuli_newUser = $data['tenDangNhap'];
+		$xuli_newPass = md5(12345678);
+
+		//Kiểm tra TK tồn tại hay chưa
+		$exist_sql = "SELECT TaiKhoan FROM nguoidung WHERE TaiKhoan = '$xuli_newUser'";
+		$exist_result = (new DB_driver())->get_row($exist_sql);
+		if ($exist_result == true) {
+		die("existed");
+		}
+
+		(new NguoiDungBUS())->add_new(array(
+		"MaND" => "",
+		"Ho" => $ho,
+		"Ten" => $ten,
+		"GioiTinh" => $gioiTinh,
+		"SDT" => $sdt,
+		"Email" => $email,
+		"DiaChi" => $diaChi,
+		"TaiKhoan" => $xuli_newUser,
+		"MatKhau" => $xuli_newPass,
+		"MaQuyen" => 1,
+		"TrangThai" => 1
+		));
+		die(json_encode(null));
 	}
 ?>

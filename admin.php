@@ -273,7 +273,7 @@
                     <!-- Theo độ rộng của table content -->
                     <th title="Sắp xếp" style="width: 5%" onclick="sortDonHangTable('stt')">Stt <i class="fa fa-sort"></i></th>
                     <th title="Sắp xếp" style="width: 7%" onclick="sortDonHangTable('madon')">Mã đơn <i class="fa fa-sort"></i></th>
-                    <th title="Sắp xếp" style="width: 20%" onclick="sortDonHangTable('khach')">Thông tin khách <i class="fa fa-sort"></i></th>
+                    <!-- <th title="Sắp xếp" style="width: 20%" onclick="sortDonHangTable('khach')">Thông tin khách <i class="fa fa-sort"></i></th> -->
                     <th title="Sắp xếp" style="width: 20%" onclick="sortDonHangTable('sanpham')">Thông tin người nhận <i class="fa fa-sort"></i></th>
                     <th title="Sắp xếp" style="width: 15%" onclick="sortDonHangTable('tongtien')">Tổng tiền <i class="fa fa-sort"></i></th>
                     <th title="Sắp xếp" style="width: 10%" onclick="sortDonHangTable('ngaygio')">Ngày giờ <i class="fa fa-sort"></i></th>
@@ -330,7 +330,56 @@
                     <option value="taikhoan">Tìm theo tài khoản</option>
                 </select>
                 <input type="text" placeholder="Tìm kiếm..." onkeyup="timKiemNguoiDung(this)">
-                <button onclick="openThemNguoiDung()"><i class="fa fa-plus-square"></i> Thêm người dùng</button>
+                <button onclick="document.getElementById('khungThemNguoiDung').style.transform = 'scale(1)'"><i class="fa fa-plus-square"></i> Thêm người dùng</button>
+            </div>
+            
+            <div id="khungThemNguoiDung" class="overlay">
+                <span class="close" onclick="this.parentElement.style.transform = 'scale(0)';">&times;</span>
+                <form method="post" action="" enctype="multipart/form-data">
+                    <table class="overlayTable table-outline table-content table-header">
+                        <tr>
+                            <th colspan="2">Thêm Người Dùng Mới</th>
+                        </tr>
+                        <tr>
+                            <td>Họ:</td>
+                            <td><input require type="text"></td>
+                        </tr>
+                        <tr>
+                            <td>Tên:</td>
+                            <td><input require type="text"></td>
+                        </tr>
+                        <tr>
+                            <td>Email:</td>
+                            <td><input require type="text"></td>
+                        </tr>
+                        <tr>
+                            <td>SĐT:</td>
+                            <td><input require type="number"></td>
+                        </tr>
+                        <tr>
+                            <td>Ngày sinh:</td>
+                            <td><input require type="date"></td>
+                        </tr>
+                        <tr>
+                            <td>Địa chỉ:</td>
+                            <td><input require type="text"></td>
+                        </tr>
+                        <tr>
+                            <td>Tên đăng nhập:</td>
+                            <td><input require type="text"></td>
+                        </tr>
+                        <tr>
+                            <td>Giới tính:</td>
+                            <td>
+                                <input type="radio" name="gender" value="1" id="male"> Nam
+                                <input type="radio" name="gender" checked value="0" id="female"> Nữ
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="table-footer"> <button name="submit" type="button" onClick="themNguoiDung()">THÊM</button> </td>
+                        </tr>
+                    </table>
+                </form>
             </div>
         </div> <!-- // khach hang -->
 
@@ -348,9 +397,9 @@
                 <canvas id="myChart3"></canvas>
             </div>
 
-            <!-- <div class="canvasContainer">
+            <div class="canvasContainer">
                 <canvas id="myChart4"></canvas>
-            </div> -->
+            </div>
 
         </div>
 

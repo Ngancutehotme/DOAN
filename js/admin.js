@@ -101,8 +101,8 @@ function addThongKe() {
         success: function (data, status, xhr) {
             const labels = data.map(item => item.TenSP)
             const dataReder = labels.map(item => data.find(e => item === e.TenSP)?.luongBan || 0)
-            var doughnutChart = dataCharts('doughnut', labels, 'Lượng bán ra', dataReder, 'Top 5 sản phẩm bán chạy nhất')
-            addChart('myChart2', doughnutChart);
+            var barChart = dataCharts('bar', labels, 'Lượng bán ra', dataReder, 'Top 5 sản phẩm bán chạy nhất')
+            addChart('myChart2', barChart);
         },
         error: function (e) {
             Swal.fire({
@@ -124,8 +124,8 @@ function addThongKe() {
             const labels = data.map(item => item.TenSP)
             const dataReder = labels.map(item => (data.find(e => item === e.TenSP)?.tongDoanhThu) || 0)
             // const d = dataReder.map(item => String(Number(item).toLocaleString('it-IT', { style: 'currency', currency: 'VND' })))
-            const pieChart = dataCharts('pie', labels, 'Tổng doanh thu', dataReder, 'Top 5 sản phẩm có tổng doanh thu cao nhất')
-            addChart('myChart3', pieChart);
+            const barChart = dataCharts('bar', labels, 'Tổng doanh thu', dataReder, 'Top 5 sản phẩm có tổng doanh thu cao nhất')
+            addChart('myChart3', barChart);
 
         },
         error: function (e) {
@@ -139,9 +139,28 @@ function addThongKe() {
     });
 
 
-    // var lineChart = copyObject(dataChart);
-    // lineChart.type = 'line';
-    // addChart('myChart4', lineChart);
+    $.ajax({
+        type: "POST",
+        url: "php/xulythongke.php",
+        dataType: "json",
+        data: {
+            request: "soDonTheoThang",
+        },
+        success: function (data, status, xhr) {
+            const labels = data.map(item => formatStatuses(item.TrangThai))
+            const dataReder = labels.map(item => (data.find(e => item === formatStatuses(e.TrangThai))?.sl) || 0)
+            const doughnutChart = dataCharts('doughnut', labels, 'Tổng doanh thu', dataReder, 'Top 5 sản phẩm có tổng doanh thu cao nhất')
+            addChart('myChart4', doughnutChart);
+        },
+        error: function (e) {
+            Swal.fire({
+                type: "error",
+                title: "Lỗi lấy dữ liệu top 5 sản phẩm có tổng doanh thu cao nhất",
+                html: e.responseText
+            });
+            console.log(e.responseText)
+        }
+    });
 }
 
 function dataCharts(type, labels, label, dataReder, text) {
@@ -867,14 +886,25 @@ function addTableDonHang(data) {
     const bills = data[0];
     var s = `<table class="table-outline hideInfo"><div id="bill" class="bill" onmouseover="setactive()" onmouseout="deactive()"></div>`;
 
+    // <td style="width: 20%">` + `<div>Tên: ${d.Ten}</div><div>Giới tính: ${d.GioiTinh}</div><div>SĐT: ${d.sdtND}</div><div>Email: ${d.Email}</div>` + `</td>
     for (var i = 0; i < bills.length; i++) {
         var d = bills[i];
+        const t = (d.TrangThai !== '3' && d.TrangThai !== '2') ?  `
+        <div class="tooltip">
+            <i class="fa fa-check" onclick="duyet('` + d.MaHD + `', ${d.TrangThai} , true)"></i>
+            <span class="tooltiptext">Duyệt</span>
+        </div>
+        <div class="tooltip">
+            <i class="fa fa-remove" onclick="duyet('` + d.MaHD + `', ${d.TrangThai}, false)"></i>
+            <span class="tooltiptext">Hủy</span>
+        </div>
+        ` : '';
+        d.GioiTinh = Number(d.GioiTinh) ? 'Nam' : 'Nữ'
         d.TrangThaiDonHang = formatStatuses(d.TrangThai)
         var statusColor = formatStatusColor(d.TrangThai)
         s += `<tr>
             <td style="width: 5%">` + (i + 1) + `</td>
             <td style="width: 7%">` + d.MaHD + `</td>
-            <td style="width: 20%">` + `<div>Tên: ${d.Ten}</div><div>Giới tính: ${d.GioiTinh}</div><div>SĐT: ${d.sdtND}</div><div>Email: ${d.Email}</div>` + `</td>
             <td style="width: 20%">` + `<div>Tên: ${d.NguoiNhan}</div><div>SĐT: ${d.SDT}</div><div>Địa chỉ: ${d.DiaChi}</div><div>PTTT: ${d.PhuongThucTT}</div>` + `</td>
             <td style="width: 15%; color:` + `${d.TongTien > 100000000 && d.TrangThai === '0' ? 'red' : '#e4e7ea'}"` + ` onmouseover="xemthongtin(${d.MaHD})">
             ` + parseInt(d.TongTien).toLocaleString() + `
@@ -882,15 +912,7 @@ function addTableDonHang(data) {
             <td style="width: 10%">` + d.NgayLap + `</td>
             <td style="width: 10%; color: ${statusColor}">` + d.TrangThaiDonHang + `</td>
             <td style="width: 10%">
-                <div class="tooltip">
-                    <i class="fa fa-check" onclick="duyet('` + d.MaHD + `', ${d.TrangThai} , true)"></i>
-                    <span class="tooltiptext">Duyệt</span>
-                </div>
-                <div class="tooltip">
-                    <i class="fa fa-remove" onclick="duyet('` + d.MaHD + `', ${d.TrangThai}, false)"></i>
-                    <span class="tooltiptext">Hủy</span>
-                </div>
-                
+                ${t}
             </td>
         </tr>`;
     }
@@ -1168,8 +1190,101 @@ function timKiemNguoiDung(inp) {
     }
 }
 
-function openThemNguoiDung() {
-    window.alert('Not Available!');
+function themNguoiDung() {
+    const ND = layThongTinNguoiDungTuTable('khungThemNguoiDung');
+    if (!ND.ho) {
+        alert("Chưa điền Họ")
+        return false;
+    }
+
+    if (!ND.ten) {
+        alert("Chưa điền Tên")
+        return false;
+    }
+
+    if (!ND.sdt) {
+        alert("Chưa điền số điện thoại")
+        return false;
+    }
+
+    if (!ND.diaChi) {
+        alert("Chưa điền địa chỉ")
+        return false;
+    }
+
+    if (ND.sdt.replace(/\D/g, '').length !== 10) {
+        alert("Số điện thoại không hợp lệ");
+        return false;
+    }
+
+    if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(ND.email))) {
+        alert("Email không hợp lệ");
+        return false;
+    }
+
+    if (!ND.ngaySinh) {
+        alert("Ngày sinh không hợp lệ")
+        return false;
+    }
+
+    if (!ND.tenDangNhap) {
+        alert("Chưa điền tên đăng nhập")
+        return false;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "php/xulytaikhoan.php",
+        dataType: "json",
+        data: {
+            request: "add",
+            data: ND
+        },
+        success: function (data) {
+            Swal.fire({
+                type: "success",
+                title: "Thêm người dùng thành công"
+            });
+            resetFormThemND();
+            document.getElementById('khungThemNguoiDung').style.transform = 'scale(0)';
+            refreshTableKhachHang();
+        },
+        error: function () {
+            Swal.fire({
+                type: "error",
+                title: "Thêm khuyến mãi thất bại"
+            });
+        }
+    });
+    return true
+}
+
+function layThongTinNguoiDungTuTable(id) {
+    var khung = document.getElementById(id);
+    var tr = khung.getElementsByTagName('tr');
+
+    var ho = tr[1].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
+    var ten = tr[2].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
+    var email = tr[3].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
+    var sdt = tr[4].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
+    var ngaySinh = tr[5].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
+    var diaChi = tr[6].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
+    var tenDangNhap = tr[7].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
+    var gioiTinh = document.querySelector('input[name="gender"]:checked').value;
+    return { ho, ten, email, sdt, ngaySinh, diaChi, tenDangNhap, gioiTinh };
+}
+
+function resetFormThemND() {
+    var khung = document.getElementById('khungThemNguoiDung');
+    var tr = khung.getElementsByTagName('tr');
+
+    tr[1].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value = "";
+    tr[2].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value = "";
+    tr[3].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value = "";
+    tr[4].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value = "";
+    tr[5].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value = "";
+    tr[6].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value = "";
+    tr[7].getElementsByTagName('td')[1].getElementsByTagName('input')[0].value = "";
 }
 
 // vô hiệu hóa người dùng (tạm dừng, không cho đăng nhập vào)

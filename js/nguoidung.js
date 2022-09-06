@@ -559,7 +559,9 @@ function addDonHang(dh) {
 }
 
 function locdonhang(status) {
-    let currentData = DSDH
+    let currentData = DSDH.sort((a, b) => {
+        return new Date(b.NgayLap) - new Date(a.NgayLap)
+    })
     if (status > -1) {
         currentData = currentData.filter(data => data.TrangThai == status)
     }

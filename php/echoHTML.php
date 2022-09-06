@@ -19,13 +19,12 @@ function addTopNav()
                 <li><a href=""><i class="fa fa-newspaper-o"></i> Tin tức</a></li>
                 <li><a href=""><i class="fa fa-handshake-o"></i> Tuyển dụng</a></li>
                 <li><a href=""><i class="fa fa-info-circle"></i> Giới thiệu</a></li>
-                <li><a href=""><i class="fa fa-wrench"></i> Bảo hành</a></li>
                 <li><a href=""><i class="fa fa-phone"></i> Liên hệ</a></li>
             </ul> <!-- End Quick link -->
         </section><!-- End Section -->
     </div><!-- End Top Nav  -->';
 }
-
+// <li><a href=""><i class="fa fa-wrench"></i> Bảo hành</a></li>
 // Thêm header
 function addHeader()
 {

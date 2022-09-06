@@ -37,6 +37,13 @@ switch ($_POST['request']) {
         $result = $db->get_list($sql);
         die(json_encode($result));
         break;
+    case 'soDonTheoThang':
+        $sql = "SELECT COUNT(*) AS sl, TrangThai FROM hoadon 
+        WHERE NgayLap BETWEEN LAST_DAY(curdate() - interval 1 month) + interval 1 day AND last_day(curdate())
+        GROUP BY TrangThai";
+        $result = $db->get_list($sql);
+        die(json_encode($result));
+        break;
     default:
         # code...
         break;
